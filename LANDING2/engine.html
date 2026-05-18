@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Galaxtarus — The Engine</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav class="top">
+  <div class="brand"><a href="index.html"><b>GALAXTARUS</b></a></div>
+  <div class="center">
+    <a href="index.html" data-en="Overview" data-fr="Accueil">Overview</a>
+    <a href="game.html" data-en="The Game" data-fr="Le Jeu">The Game</a>
+    <a href="engine.html" class="active" data-en="The Engine" data-fr="Le Moteur">The Engine</a>
+    <a href="tech.html" data-en="Tech" data-fr="Tech">Tech</a>
+  </div>
+  <div class="lang-toggle">
+    <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+    <button id="btn-fr" onclick="setLang('fr')">FR</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="pill" data-en="// THE ENGINE" data-fr="// LE MOTEUR">// THE ENGINE</span>
+  <h1 data-en="We built our own&nbsp;<em>engine.</em> It ships with the&nbsp;game." data-fr="On a construit notre propre&nbsp;<em>moteur.</em> Il est livré avec le&nbsp;jeu.">We built our own&nbsp;<em>engine.</em> It ships with the&nbsp;game.</h1>
+  <p class="tag" data-en="Pure ES6 classes. No build step. No bundler. No npm. No server. A folder of files, double-click the HTML, the game runs. The engine ships in the same folder. Open it, read it, fork it. Make your own game with it." data-fr="Vraies classes ES6. Pas de build. Pas de bundler. Pas de npm. Pas de serveur. Un dossier de fichiers, double-clic sur le HTML, le jeu tourne. Le moteur est livré dans le même dossier. Ouvre-le, lis-le, forke-le. Fais ton propre jeu avec.">Pure ES6 classes. No build step. No bundler. No npm. No server. A folder of files, double-click the HTML, the game runs. The engine ships in the same folder. Open it, read it, fork it. Make your own game with it.</p>
+  <div>
+    <a href="#deluxe" class="cta" data-en="USB Deluxe tier" data-fr="Palier USB Deluxe">USB Deluxe tier</a>
+    <a href="tech.html" class="cta ghost" data-en="See the tech" data-fr="Voir la tech">See the tech</a>
+  </div>
+</section>
+
+<!-- WHY -->
+<section>
+  <span class="kicker" data-en="// WHY OUR OWN ENGINE" data-fr="// POURQUOI NOTRE PROPRE MOTEUR">// WHY OUR OWN ENGINE</span>
+  <h2 data-en="Because engines die. <em>Folders of text files don't.</em>" data-fr="Parce que les engines meurent. <em>Les dossiers de fichiers texte, non.</em>">Because engines die. <em>Folders of text files don't.</em></h2>
+  <p class="lead" data-en="Unity changes its license. Unreal needs a hundred-gig install. Phaser breaks when a dependency updates. Godot is solid — but it's still a binary on your disk that one day won't run on your OS." data-fr="Unity change sa licence. Unreal demande cent gigas d'installation. Phaser casse quand une dépendance se met à jour. Godot est solide — mais ça reste un binaire qui un jour ne tournera plus sur ton OS.">Unity changes its license. Unreal needs a hundred-gig install. Phaser breaks when a dependency updates. Godot is solid — but it's still a binary on your disk that one day won't run on your OS.</p>
+  <p data-en="We wanted something else. A game engine that's a folder of text files. You read them. You understand them. You modify them. They will keep running on any computer that can open a browser — for decades. No install. No build. No version mismatch. No mandatory update. No telemetry phoning home." data-fr="On voulait autre chose. Un moteur qui est un dossier de fichiers texte. On les lit. On les comprend. On les modifie. Ils continueront à tourner sur n'importe quel ordinateur qui peut ouvrir un browser — pendant des décennies. Pas d'install. Pas de build. Pas de désync de version. Pas de mise à jour obligatoire. Pas de télémétrie qui appelle la maison.">We wanted something else. A game engine that's a folder of text files. You read them. You understand them. You modify them. They will keep running on any computer that can open a browser — for decades. No install. No build. No version mismatch. No mandatory update. No telemetry phoning home.</p>
+  <p data-en="<em>Worst case it works. Best case, it works anyway.</em>" data-fr="<em>Au pire ça marche. Au mieux, ça marche aussi.</em>"><em>Worst case it works. Best case, it works anyway.</em></p>
+</section>
+
+<div class="divider"><hr/></div>
+
+<!-- THREE ARTEFACTS -->
+<section>
+  <span class="kicker" data-en="// THREE ARTEFACTS, ONE GESTURE" data-fr="// TROIS ARTEFACTS, UN SEUL GESTE">// THREE ARTEFACTS, ONE GESTURE</span>
+  <h2 data-en="The engine is part of a&nbsp;<em>family</em>." data-fr="Le moteur fait partie d'une&nbsp;<em>famille</em>.">The engine is part of a <em>family</em>.</h2>
+  <p class="lead" data-en="Galaxtarus is made by hand at three levels. They share a logic: slow, readable, durable." data-fr="Galaxtarus est fait à la main à trois niveaux. Ils partagent une logique : lent, lisible, durable.">Galaxtarus is made by hand at three levels. They share a logic: slow, readable, durable.</p>
+
+  <div class="paths">
+    <div class="path">
+      <div class="pkicker" data-en="// 01 · THE CODE" data-fr="// 01 · LE CODE">// 01 · THE CODE</div>
+      <div class="ptitle" data-en="The <em>engine</em>" data-fr="Le <em>moteur</em>">The <em>engine</em></div>
+      <div class="pdesc" data-en="Vanilla JavaScript classes. A beginner can open Ship.js and understand it in an hour. No abstraction layers you can't see through." data-fr="Classes JavaScript vanilla. Un débutant peut ouvrir Ship.js et le comprendre en une heure. Aucune couche d'abstraction opaque.">Vanilla JavaScript classes. A beginner can open Ship.js and understand it in an hour. No abstraction layers you can't see through.</div>
+    </div>
+    <div class="path">
+      <div class="pkicker" data-en="// 02 · THE SOUND" data-fr="// 02 · LE SON">// 02 · THE SOUND</div>
+      <div class="ptitle" data-en="The <span class='cyan'>music</span>" data-fr="La <span class='cyan'>musique</span>">The <span class="cyan">music</span></div>
+      <div class="pdesc" data-en="Composed note by note. Tone.js synthesis + raw MIDI option in preferences. A .mid file weighs 5 KB and opens in any sequencer since 1983." data-fr="Composée note par note. Synthèse Tone.js + option MIDI brut dans les préférences. Un .mid pèse 5 KB et s'ouvre dans n'importe quel séquenceur depuis 1983.">Composed note by note. Tone.js synthesis + raw MIDI option in preferences. A .mid file weighs 5 KB and opens in any sequencer since 1983.</div>
+    </div>
+    <div class="path">
+      <div class="pkicker" data-en="// 03 · THE OBJECT" data-fr="// 03 · L'OBJET">// 03 · THE OBJECT</div>
+      <div class="ptitle" data-en="The <span class='yellow'>chest</span>" data-fr="Le <span class='yellow'>coffret</span>">The <span class="yellow">chest</span></div>
+      <div class="pdesc" data-en="Hand-carved wood by Raphaël (chip carver, international level). Engraved with the shuttle. USB stick inside containing everything. Signed and numbered." data-fr="Bois sculpté à la main par Raphaël (chip carver, niveau international). Gravé avec la navette. Clé USB à l'intérieur contenant tout. Signé et numéroté.">Hand-carved wood by Raphaël (chip carver, international level). Engraved with the shuttle. USB stick inside containing everything. Signed and numbered.</div>
+    </div>
+  </div>
+
+  <p data-en="Three artefacts, one gesture: made by hand, without dependencies, designed to outlive the people who made them." data-fr="Trois artefacts, un seul geste : fait à la main, sans dépendances, conçu pour survivre à ceux qui les ont faits.">Three artefacts, one gesture: made by hand, without dependencies, designed to outlive the people who made them.</p>
+</section>
+
+<!-- PULL QUOTE -->
+<div class="pullquote">
+  <span data-en="Open the folder.&nbsp;<span class='accent'>Read the code.</span>&nbsp;Make your own game." data-fr="Ouvre le dossier.&nbsp;<span class='accent'>Lis le code.</span>&nbsp;Fais ton propre jeu.">Open the folder. <span class="accent">Read the code.</span> Make your own game.</span>
+  <span class="sub" data-en="The engine is yours too." data-fr="Le moteur est à toi aussi.">The engine is yours too.</span>
+</div>
+
+<!-- ARCHITECTURE -->
+<section>
+  <span class="kicker" data-en="// ARCHITECTURE" data-fr="// ARCHITECTURE">// ARCHITECTURE</span>
+  <h2 data-en="Four root classes. <em>Composition over inheritance.</em>" data-fr="Quatre classes racines. <em>Composition plutôt qu'héritage.</em>">Four root classes. <em>Composition over inheritance.</em></h2>
+  <p class="lead" data-en="The engine is built around four root abstractions. They're small, clear, and reusable for any 2D game — RPG, shooter, puzzle, exploration." data-fr="Le moteur est bâti autour de quatre abstractions racines. Petites, claires, et réutilisables pour n'importe quel jeu 2D — RPG, shooter, puzzle, exploration.">The engine is built around four root abstractions. They're small, clear, and reusable for any 2D game — RPG, shooter, puzzle, exploration.</p>
+
+  <table class="spec">
+    <tr><th data-en="Class" data-fr="Classe">Class</th><th data-en="Role" data-fr="Rôle">Role</th></tr>
+    <tr>
+      <td>Behavior</td>
+      <td data-en="Anything that lives. Has update(dt), state, bus listening, dispose." data-fr="Tout ce qui vit. Possède update(dt), un état, écoute du bus, dispose.">Anything that lives. Has update(dt), state, bus listening, dispose.</td>
+    </tr>
+    <tr>
+      <td>Entity</td>
+      <td data-en="A thing with a position in the world. A container of Components — never a monolith." data-fr="Une chose avec une position dans le monde. Un container de Components — jamais un blob.">A thing with a position in the world. A container of Components — never a monolith.</td>
+    </tr>
+    <tr>
+      <td>Sequence</td>
+      <td data-en="A scripted narrative orchestrator. Cinematics, scenarios, timed events." data-fr="Un orchestrateur narratif scripté. Cinématiques, scénarios, événements temporisés.">A scripted narrative orchestrator. Cinematics, scenarios, timed events.</td>
+    </tr>
+    <tr>
+      <td>System</td>
+      <td data-en="A transverse singleton — CollisionSystem, SaveCoordinator, AiDirector. No spatial position." data-fr="Un singleton transverse — CollisionSystem, SaveCoordinator, AiDirector. Pas de position spatiale.">A transverse singleton — CollisionSystem, SaveCoordinator, AiDirector. No spatial position.</td>
+    </tr>
+    <tr>
+      <td>EventBus</td>
+      <td data-en="A simple publish/subscribe channel. All communication goes through it. No hidden globals." data-fr="Un simple canal publish/subscribe. Toute communication passe par lui. Pas de globales cachées.">A simple publish/subscribe channel. All communication goes through it. No hidden globals.</td>
+    </tr>
+    <tr>
+      <td>StateMachine</td>
+      <td data-en="Tiny finite state machine for AI, animations, dialogues, anything with phases." data-fr="Petite state machine finie pour IA, animations, dialogues, tout ce qui a des phases.">Tiny finite state machine for AI, animations, dialogues, anything with phases.</td>
+    </tr>
+  </table>
+
+  <p data-en="Above all that, a single rule: classes go on <code>window.GALAXTARUS</code>, instances get injected. No singletons. No hidden coupling. Any project built with this engine can swap whatever it wants." data-fr="Au-dessus de tout ça, une règle unique : les classes s'exposent sur <code>window.GALAXTARUS</code>, les instances sont injectées. Pas de singletons. Pas de couplage caché. Tout projet construit avec ce moteur peut remplacer ce qu'il veut.">Above all that, a single rule: classes go on <code>window.GALAXTARUS</code>, instances get injected. No singletons. No hidden coupling. Any project built with this engine can swap whatever it wants.</p>
+</section>
+
+<div class="divider"><hr/></div>
+
+<!-- WHO IT'S FOR -->
+<section>
+  <span class="kicker" data-en="// WHO IT'S FOR" data-fr="// POUR QUI">// WHO IT'S FOR</span>
+  <h2 data-en="For people who want to <em>understand</em>, not just import." data-fr="Pour ceux qui veulent <em>comprendre</em>, pas juste importer.">For people who want to <em>understand</em>, not just import.</h2>
+
+  <div class="split">
+    <div class="text">
+      <p data-en="<strong style='color:#fff'>Self-taught hobbyists</strong> who want to see a real game engine without a Computer Science degree." data-fr="<strong style='color:#fff'>Hobbyistes autodidactes</strong> qui veulent voir un vrai moteur de jeu sans passer par une licence en informatique."><strong style="color:#fff">Self-taught hobbyists</strong> who want to see a real game engine without a Computer Science degree.</p>
+      <p data-en="<strong style='color:#fff'>Students</strong> learning programming, who can read this engine from the first line to the last and follow what's happening." data-fr="<strong style='color:#fff'>Étudiants</strong> qui apprennent à programmer, qui peuvent lire ce moteur de la première ligne à la dernière en suivant ce qui se passe."><strong style="color:#fff">Students</strong> learning programming, who can read this engine from the first line to the last and follow what's happening.</p>
+      <p data-en="<strong style='color:#fff'>Teachers</strong> who need an example to show in class — a complete, real, shipping engine that fits in one folder." data-fr="<strong style='color:#fff'>Profs</strong> qui ont besoin d'un exemple à montrer en classe — un moteur complet, réel, livré, qui tient dans un dossier."><strong style="color:#fff">Teachers</strong> who need an example to show in class — a complete, real, shipping engine that fits in one folder.</p>
+      <p data-en="<strong style='color:#fff'>Indie devs</strong> who want a small, sober, dependable starting point for a small game — without committing to a stack that'll be obsolete in three years." data-fr="<strong style='color:#fff'>Devs indé</strong> qui veulent un point de départ petit, sobre, fiable pour un petit jeu — sans s'engager dans une stack obsolète dans trois ans."><strong style="color:#fff">Indie devs</strong> who want a small, sober, dependable starting point for a small game — without committing to a stack that'll be obsolete in three years.</p>
+      <p data-en="<strong style='color:#fff'>Collectors</strong> who like the idea of holding a game engine in their hand." data-fr="<strong style='color:#fff'>Collectionneurs</strong> qui aiment l'idée de tenir un moteur de jeu dans leur main."><strong style="color:#fff">Collectors</strong> who like the idea of holding a game engine in their hand.</p>
+    </div>
+    <div class="visual">
+      <div class="imgph square">
+        <div class="imgph-label" data-en="[ IMAGE — CODE EDITOR ]" data-fr="[ IMAGE — ÉDITEUR DE CODE ]">[ IMAGE — CODE EDITOR ]</div>
+        <div class="imgph-desc" data-en="VS Code or similar with src/entities/Ship.js open. Reading the engine like reading a book." data-fr="VS Code ou similaire avec src/entities/Ship.js ouvert. Lire le moteur comme on lit un livre.">VS Code or similar with src/entities/Ship.js open. Reading the engine like reading a book.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S IN THE BOX -->
+<section id="deluxe">
+  <span class="kicker" data-en="// USB DELUXE — WHAT'S IN THE BOX" data-fr="// USB DELUXE — CONTENU">// USB DELUXE — WHAT'S IN THE BOX</span>
+  <h2 data-en="The game, the engine, and every <em>tool</em> we used." data-fr="Le jeu, le moteur, et tous les <em>outils</em> qu'on a utilisés.">The game, the engine, and every <em>tool</em> we used.</h2>
+  <p class="lead" data-en="If you back at the USB Deluxe tier, you also get every editor we built to make Galaxtarus. The same tools we used. The ones that run from file:// like nothing has changed since 1998." data-fr="Si tu soutiens au palier USB Deluxe, tu reçois aussi tous les éditeurs qu'on a faits pour créer Galaxtarus. Les mêmes outils. Ceux qui tournent en file:// comme si rien n'avait changé depuis 1998.">If you back at the USB Deluxe tier, you also get every editor we built to make Galaxtarus. The same tools we used. The ones that run from file:// like nothing has changed since 1998.</p>
+
+  <table class="spec">
+    <tr><th data-en="Tool" data-fr="Outil">Tool</th><th data-en="What it does" data-fr="Ce qu'il fait">What it does</th></tr>
+    <tr><td>zone_editor.html</td><td data-en="Design zones — asteroids, pickups, triggers, drawings, force fields, markers, notes." data-fr="Designer des zones — astéroïdes, pickups, triggers, dessins, force fields, marqueurs, notes.">Design zones — asteroids, pickups, triggers, drawings, force fields, markers, notes.</td></tr>
+    <tr><td>universe_editor.html</td><td data-en="Macro-map of the universe. Place zones in the world. Define travel times." data-fr="Carte macro de l'univers. Placer les zones dans le monde. Définir les temps de voyage.">Macro-map of the universe. Place zones in the world. Define travel times.</td></tr>
+    <tr><td>planet_editor.html</td><td data-en="Build procedural planets — rings, atmospheres, surfaces, palettes." data-fr="Construire des planètes procédurales — anneaux, atmosphères, surfaces, palettes.">Build procedural planets — rings, atmospheres, surfaces, palettes.</td></tr>
+    <tr><td>boss_editor.html</td><td data-en="Compose multi-segment bosses with state machines. Sixteen movement primitives." data-fr="Composer des boss multi-segments avec state machines. Seize primitives de mouvement.">Compose multi-segment bosses with state machines. Sixteen movement primitives.</td></tr>
+    <tr><td>music_editor.html</td><td data-en="Procedural audio composition. Tone.js front-end." data-fr="Composition audio procédurale. Front-end Tone.js.">Procedural audio composition. Tone.js front-end.</td></tr>
+    <tr><td>drawing_editor.html</td><td data-en="A small vector editor: points, lines, polygons, circles. Used for boss artwork, monoliths, ornaments." data-fr="Un petit éditeur vectoriel : points, lignes, polygones, cercles. Utilisé pour l'art des boss, monolithes, ornements.">A small vector editor: points, lines, polygons, circles. Used for boss artwork, monoliths, ornaments.</td></tr>
+  </table>
+
+  <p data-en="Plus the engine source code. Plus the <code>.md</code> design notes we wrote while building. The full creative paper trail. Everything fits on a USB stick. Nothing requires the internet to keep working." data-fr="Plus le code source du moteur. Plus les notes de design <code>.md</code> qu'on a écrites pendant la construction. La piste créative complète. Tout ça tient sur une clé USB. Rien n'a besoin d'internet pour continuer à marcher.">Plus the engine source code. Plus the <code>.md</code> design notes we wrote while building. The full creative paper trail. Everything fits on a USB stick. Nothing requires the internet to keep working.</p>
+
+  <div style="margin-top:40px;">
+    <a href="game.html#pledge" class="cta" data-en="See pledge tiers →" data-fr="Voir les paliers →">See pledge tiers →</a>
+    <a href="tech.html" class="cta ghost" data-en="Tech details →" data-fr="Détails techniques →">Tech details →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="pages">
+    <a href="index.html" data-en="Overview" data-fr="Accueil">Overview</a> ·
+    <a href="game.html" data-en="The Game" data-fr="Le Jeu">The Game</a> ·
+    <a href="engine.html" data-en="The Engine" data-fr="Le Moteur">The Engine</a> ·
+    <a href="tech.html" data-en="Tech" data-fr="Tech">Tech</a>
+  </div>
+  <div data-en="© 2026 Galaxtarus · Made on a USB stick · Written with an AI" data-fr="© 2026 Galaxtarus · Fabriqué sur une clé USB · Écrit avec une IA">© 2026 Galaxtarus · Made on a USB stick · Written with an AI</div>
+</footer>
+
+<script src="i18n.js"></script>
+</body>
+</html>

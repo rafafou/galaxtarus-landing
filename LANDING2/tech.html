@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Galaxtarus — Tech</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav class="top">
+  <div class="brand"><a href="index.html"><b>GALAXTARUS</b></a></div>
+  <div class="center">
+    <a href="index.html" data-en="Overview" data-fr="Accueil">Overview</a>
+    <a href="game.html" data-en="The Game" data-fr="Le Jeu">The Game</a>
+    <a href="engine.html" data-en="The Engine" data-fr="Le Moteur">The Engine</a>
+    <a href="tech.html" class="active" data-en="Tech" data-fr="Tech">Tech</a>
+  </div>
+  <div class="lang-toggle">
+    <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+    <button id="btn-fr" onclick="setLang('fr')">FR</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="pill" data-en="// TECH MANIFESTO" data-fr="// MANIFESTE TECHNIQUE">// TECH MANIFESTO</span>
+  <h1 data-en="For people who want to&nbsp;<em>understand</em> how it works." data-fr="Pour ceux qui veulent&nbsp;<em>comprendre</em> comment ça marche.">For people who want to&nbsp;<em>understand</em> how it works.</h1>
+  <p class="tag" data-en="Every technical decision behind Galaxtarus, in one place. Why file://. Why vanilla. Why MIDI. Why hand-carved wood. The choices, and the trade-offs we accepted." data-fr="Toutes les décisions techniques derrière Galaxtarus, dans un seul endroit. Pourquoi file://. Pourquoi vanilla. Pourquoi MIDI. Pourquoi du bois sculpté à la main. Les choix, et les compromis acceptés.">Every technical decision behind Galaxtarus, in one place. Why file://. Why vanilla. Why MIDI. Why hand-carved wood. The choices, and the trade-offs we accepted.</p>
+</section>
+
+<!-- MANIFESTO -->
+<section>
+  <span class="kicker" data-en="// THE GROUND RULE" data-fr="// LA RÈGLE DE BASE">// THE GROUND RULE</span>
+  <h2 data-en="If civilization collapses tomorrow, the game <em>still runs.</em>" data-fr="Si la civilisation s'effondre demain, le jeu <em>marche encore.</em>">If civilization collapses tomorrow, the game <em>still runs.</em></h2>
+  <p class="lead" data-en="And if it doesn't — statistically more likely — the game still runs anyway. When Steam shuts down. When a mandatory patch turns a work of art into an error page. When a dev loses interest and their site goes down. When the storefronts close." data-fr="Et si elle ne s'effondre pas — ce qui, statistiquement, est plus probable — le jeu marche quand même. Quand Steam ferme un jour. Quand un patch obligatoire transforme une œuvre en page d'erreur. Quand un dev perd intérêt et son site tombe. Quand les boutiques ferment.">And if it doesn't — statistically more likely — the game still runs anyway. When Steam shuts down. When a mandatory patch turns a work of art into an error page. When a dev loses interest and their site goes down. When the storefronts close.</p>
+  <p data-en="<em>Worst case it works. Best case, it works anyway.</em>" data-fr="<em>Au pire ça marche. Au mieux, ça marche aussi.</em>"><em>Worst case it works. Best case, it works anyway.</em></p>
+  <p data-en="So Galaxtarus has no build step. No bundler. No npm. No server. No DRM. No telemetry. No mandatory updates. A folder of files, double-click the HTML, the game runs. From a USB stick. From a hard drive. From a laptop on solar panels, off the grid, after the internet stutters." data-fr="Donc Galaxtarus n'a pas de build. Pas de bundler. Pas de npm. Pas de serveur. Pas de DRM. Pas de télémétrie. Pas de mise à jour obligatoire. Un dossier de fichiers, double-clic sur le HTML, le jeu tourne. Depuis une clé USB. Depuis un disque dur. Depuis un laptop sur panneaux solaires, hors-réseau, après qu'internet ait bégayé.">So Galaxtarus has no build step. No bundler. No npm. No server. No DRM. No telemetry. No mandatory updates. A folder of files, double-click the HTML, the game runs. From a USB stick. From a hard drive. From a laptop on solar panels, off the grid, after the internet stutters.</p>
+</section>
+
+<!-- STACK -->
+<section>
+  <span class="kicker" data-en="// THE STACK" data-fr="// LA STACK">// THE STACK</span>
+  <h2 data-en="What it's built with. <em>And what it's not.</em>" data-fr="Avec quoi c'est construit. <em>Et avec quoi ça ne l'est pas.</em>">What it's built with. <em>And what it's not.</em></h2>
+
+  <table class="spec">
+    <tr><th data-en="Layer" data-fr="Couche">Layer</th><th data-en="Choice" data-fr="Choix">Choice</th><th data-en="Trade-off accepted" data-fr="Compromis accepté">Trade-off accepted</th></tr>
+    <tr>
+      <td data-en="Language" data-fr="Langage">Language</td>
+      <td>Vanilla ES6 JavaScript</td>
+      <td data-en="No TypeScript. No compile step. Boilerplate eaten by hand." data-fr="Pas de TypeScript. Pas d'étape de compile. Du boilerplate avalé à la main.">No TypeScript. No compile step. Boilerplate eaten by hand.</td>
+    </tr>
+    <tr>
+      <td data-en="Modules" data-fr="Modules">Modules</td>
+      <td data-en="None — global namespace <code>window.GALAXTARUS</code>" data-fr="Aucun — namespace global <code>window.GALAXTARUS</code>">None — global namespace <code>window.GALAXTARUS</code></td>
+      <td data-en="ES6 modules need a server (file:// blocks them via CORS). We use script tags loaded in order." data-fr="Les modules ES6 ont besoin d'un serveur (file:// les bloque via CORS). On utilise des script tags chargés dans l'ordre.">ES6 modules need a server (file:// blocks them via CORS). We use script tags loaded in order.</td>
+    </tr>
+    <tr>
+      <td data-en="Rendering" data-fr="Rendu">Rendering</td>
+      <td>Canvas 2D</td>
+      <td data-en="No WebGL. No 3D. 2D works on anything since 2005. 3D ages badly." data-fr="Pas de WebGL. Pas de 3D. La 2D tourne sur n'importe quoi depuis 2005. La 3D vieillit mal.">No WebGL. No 3D. 2D works on anything since 2005. 3D ages badly.</td>
+    </tr>
+    <tr>
+      <td data-en="Audio" data-fr="Audio">Audio</td>
+      <td>Tone.js + raw MIDI option</td>
+      <td data-en="Procedural synthesis means no sample bank. MIDI fallback ~5 KB per track." data-fr="Synthèse procédurale = pas de banque de samples. Fallback MIDI ~5 KB par piste.">Procedural synthesis means no sample bank. MIDI fallback ~5 KB per track.</td>
+    </tr>
+    <tr>
+      <td data-en="Network" data-fr="Réseau">Network</td>
+      <td data-en="None" data-fr="Aucun">None</td>
+      <td data-en="No multiplayer. No leaderboard. No cloud saves. The game is yours, alone." data-fr="Pas de multijoueur. Pas de leaderboard. Pas de cloud saves. Le jeu est à toi, seul.">No multiplayer. No leaderboard. No cloud saves. The game is yours, alone.</td>
+    </tr>
+    <tr>
+      <td data-en="Persistence" data-fr="Persistance">Persistence</td>
+      <td>localStorage</td>
+      <td data-en="No accounts. Save data lives in the browser. Backup is copy-paste." data-fr="Pas de comptes. Les sauvegardes vivent dans le browser. Le backup, c'est du copier-coller.">No accounts. Save data lives in the browser. Backup is copy-paste.</td>
+    </tr>
+    <tr>
+      <td data-en="Build" data-fr="Build">Build</td>
+      <td data-en="None" data-fr="Aucun">None</td>
+      <td data-en="No tree-shaking, no minification. Trade-off: zero risk of build breakage at 2am." data-fr="Pas de tree-shaking, pas de minification. Compromis : zéro risque de build cassé à 2h du mat.">No tree-shaking, no minification. Trade-off: zero risk of build breakage at 2am.</td>
+    </tr>
+    <tr>
+      <td data-en="Dependencies" data-fr="Dépendances">Dependencies</td>
+      <td data-en="Tone.js (bundled locally), nothing else" data-fr="Tone.js (bundled local), rien d'autre">Tone.js (bundled locally), nothing else</td>
+      <td data-en="No npm hell. No dependency tree. One library, included as a single file." data-fr="Pas de npm hell. Pas d'arbre de dépendances. Une lib, incluse comme un seul fichier.">No npm hell. No dependency tree. One library, included as a single file.</td>
+    </tr>
+  </table>
+</section>
+
+<div class="divider"><hr/></div>
+
+<!-- OOP RULES -->
+<section>
+  <span class="kicker" data-en="// THE OOP RULES" data-fr="// LES RÈGLES POO">// THE OOP RULES</span>
+  <h2 data-en="Real classes. <em>Real composition.</em>" data-fr="Vraies classes. <em>Vraie composition.</em>">Real classes. <em>Real composition.</em></h2>
+  <p class="lead" data-en="Everything in the engine is a class. No procedural blobs. No hidden globals. Two non-negotiable rules govern every file." data-fr="Tout dans le moteur est une classe. Pas de blocs procéduraux. Pas de globales cachées. Deux règles non-négociables gouvernent chaque fichier.">Everything in the engine is a class. No procedural blobs. No hidden globals. Two non-negotiable rules govern every file.</p>
+
+  <p data-en="<strong style='color:#fff'>Rule 1 — namespace = file path.</strong> A class in <code>src/entities/Ship.js</code> is exposed as <code>GALAXTARUS.entities.Ship</code>. If you know the namespace, you know the file. If you know the file, you know the namespace. No exceptions." data-fr="<strong style='color:#fff'>Règle 1 — namespace = chemin du fichier.</strong> Une classe dans <code>src/entities/Ship.js</code> est exposée comme <code>GALAXTARUS.entities.Ship</code>. Si tu connais le namespace, tu connais le fichier. Si tu connais le fichier, tu connais le namespace. Pas d'exceptions."><strong style="color:#fff">Rule 1 — namespace = file path.</strong> A class in <code>src/entities/Ship.js</code> is exposed as <code>GALAXTARUS.entities.Ship</code>. If you know the namespace, you know the file. If you know the file, you know the namespace. No exceptions.</p>
+
+  <p data-en="<strong style='color:#fff'>Rule 2 — injected instances, no global singletons.</strong> Classes go on <code>window.GALAXTARUS</code>. Instances get created at boot and passed around in a single <code>game</code> context object. No hidden coupling. Any project built with this engine swaps whatever it wants." data-fr="<strong style='color:#fff'>Règle 2 — instances injectées, pas de singletons globaux.</strong> Les classes vivent sur <code>window.GALAXTARUS</code>. Les instances sont créées au boot et circulent dans un objet contexte <code>game</code> unique. Pas de couplage caché. Tout projet construit avec ce moteur peut remplacer ce qu'il veut."><strong style="color:#fff">Rule 2 — injected instances, no global singletons.</strong> Classes go on <code>window.GALAXTARUS</code>. Instances get created at boot and passed around in a single <code>game</code> context object. No hidden coupling. Any project built with this engine swaps whatever it wants.</p>
+
+  <pre class="code"><span class="com">// src/entities/Ship.js</span>
+class Ship {
+  constructor(wx, wy) {
+    this.wx = wx;
+    this.wy = wy;
+    this.vx = 0;
+    this.vy = 0;
+  }
+  update(input, dt) {
+    <span class="com">// inertia, boost, overheat — all here, no hidden state</span>
+  }
+  render(ctx, camera, t) { <span class="com">/* ... */</span> }
+}
+window.GALAXTARUS = window.GALAXTARUS || {};
+window.GALAXTARUS.entities = window.GALAXTARUS.entities || {};
+window.GALAXTARUS.entities.Ship = Ship;</pre>
+
+  <pre class="code"><span class="com">// boot — galaxtarus.html</span>
+const G = window.GALAXTARUS;
+const bus   = new G.core.EventBus();
+const clock = new G.core.SimulationClock();
+const ship  = new G.entities.Ship(0, 0);
+const game  = Object.freeze({ bus, clock, ship, <span class="com">/* etc */</span> });
+
+<span class="com">// every system gets <code>game</code>. Nothing leaks via globals.</span>
+const combat = new G.systems.Combat(game);
+const ai     = new G.systems.AiDirector(game);</pre>
+</section>
+
+<!-- DECISIONS -->
+<section>
+  <span class="kicker" data-en="// FAQ" data-fr="// FAQ">// FAQ</span>
+  <h2 data-en="What you'll <em>want to ask.</em>" data-fr="Ce que tu <em>vas vouloir demander.</em>">What you'll <em>want to ask.</em></h2>
+
+  <p data-en="<strong style='color:#fff'>Why no engine like Godot or Phaser?</strong> Because they have install steps, version mismatches, and dependencies that age. We wanted a folder of text files that opens in any browser, today and in twenty years. The trade-off: less features out of the box. The win: full control, full readability, full longevity." data-fr="<strong style='color:#fff'>Pourquoi pas un moteur comme Godot ou Phaser ?</strong> Parce qu'ils ont des étapes d'install, des désyncs de version, des dépendances qui vieillissent. On voulait un dossier de fichiers texte qui s'ouvre dans n'importe quel browser, aujourd'hui et dans vingt ans. Le compromis : moins de features prêtes. Le gain : contrôle total, lisibilité totale, longévité totale."><strong style="color:#fff">Why no engine like Godot or Phaser?</strong> Because they have install steps, version mismatches, and dependencies that age. We wanted a folder of text files that opens in any browser, today and in twenty years. The trade-off: less features out of the box. The win: full control, full readability, full longevity.</p>
+
+  <p data-en="<strong style='color:#fff'>Why 2D and not 3D?</strong> A 2D game from 1992 still runs. A 3D game from 2002 often doesn't (driver issues, dead shaders, dead engines). 2D is the tech that survives decades. It's also faster to develop, easier to read, more portable, and historically the home of indie classics — Celeste, Hollow Knight, Hades, Stardew Valley, Undertale." data-fr="<strong style='color:#fff'>Pourquoi 2D et pas 3D ?</strong> Un jeu 2D de 1992 tourne encore. Un jeu 3D de 2002 souvent non (problèmes de drivers, shaders morts, engines morts). La 2D est la techno qui survit aux décennies. C'est aussi plus rapide à développer, plus lisible, plus portable, et historiquement la maison des classiques indé — Celeste, Hollow Knight, Hades, Stardew Valley, Undertale."><strong style="color:#fff">Why 2D and not 3D?</strong> A 2D game from 1992 still runs. A 3D game from 2002 often doesn't (driver issues, dead shaders, dead engines). 2D is the tech that survives decades. It's also faster to develop, easier to read, more portable, and historically the home of indie classics — Celeste, Hollow Knight, Hades, Stardew Valley, Undertale.</p>
+
+  <p data-en="<strong style='color:#fff'>Why MIDI?</strong> A piano sample is 50 MB. A piano MIDI is 5 KB. MIDI files open in any sequencer made since 1983. The pitch and timing are independent of the synth — you can swap the instrument, save the file as a text snapshot, modify the notes by hand. It's the most resilient music format that exists. Tone.js renders it procedurally in the browser, so no sound assets need to ship with the game." data-fr="<strong style='color:#fff'>Pourquoi MIDI ?</strong> Un sample de piano fait 50 MB. Un piano en MIDI fait 5 KB. Les fichiers MIDI s'ouvrent dans n'importe quel séquenceur fait depuis 1983. La hauteur et le timing sont indépendants du synthé — tu peux remplacer l'instrument, sauver le fichier comme snapshot texte, modifier les notes à la main. C'est le format musical le plus résilient qui existe. Tone.js le rend procéduralement dans le browser, donc aucun asset son n'a besoin d'être livré avec le jeu."><strong style="color:#fff">Why MIDI?</strong> A piano sample is 50 MB. A piano MIDI is 5 KB. MIDI files open in any sequencer made since 1983. The pitch and timing are independent of the synth — you can swap the instrument, save the file as a text snapshot, modify the notes by hand. It's the most resilient music format that exists. Tone.js renders it procedurally in the browser, so no sound assets need to ship with the game.</p>
+
+  <p data-en="<strong style='color:#fff'>Why hand-carved wood?</strong> Because Raphaël is also a chip carver, internationally recognized. The Kickstarter collector tier deserves an object made the same way the rest of the project was: by hand, slowly, with care. Wood and code share more than people think. Both are slow. Both are quiet. Both leave marks." data-fr="<strong style='color:#fff'>Pourquoi du bois sculpté à la main ?</strong> Parce que Raphaël est aussi chip carver, reconnu à l'international. Le tier collector du Kickstarter mérite un objet fait de la même façon que le reste du projet : à la main, lentement, avec soin. Le bois et le code ont plus en commun que les gens pensent. Tous deux sont lents. Tous deux sont silencieux. Tous deux laissent des marques."><strong style="color:#fff">Why hand-carved wood?</strong> Because Raphaël is also a chip carver, internationally recognized. The Kickstarter collector tier deserves an object made the same way the rest of the project was: by hand, slowly, with care. Wood and code share more than people think. Both are slow. Both are quiet. Both leave marks.</p>
+
+  <p data-en="<strong style='color:#fff'>What runs Galaxtarus?</strong> Any computer with a modern browser — Chrome, Firefox, Edge, Safari. Linux, Windows, macOS, ChromeOS. Old laptops. Refurbished hardware. Off-the-grid setups with solar power. The minimum bar is whatever your browser needs. The maximum bar is — well, it doesn't get harder than this." data-fr="<strong style='color:#fff'>Qu'est-ce qui fait tourner Galaxtarus ?</strong> N'importe quel ordi avec un browser moderne — Chrome, Firefox, Edge, Safari. Linux, Windows, macOS, ChromeOS. Vieux laptops. Hardware reconditionné. Setups hors-réseau sur panneau solaire. Le minimum, c'est ce dont ton browser a besoin. Le maximum — eh bien, ça ne devient pas plus difficile que ça."><strong style="color:#fff">What runs Galaxtarus?</strong> Any computer with a modern browser — Chrome, Firefox, Edge, Safari. Linux, Windows, macOS, ChromeOS. Old laptops. Refurbished hardware. Off-the-grid setups with solar power. The minimum bar is whatever your browser needs. The maximum bar is — well, it doesn't get harder than this.</p>
+</section>
+
+<!-- PULL QUOTE -->
+<div class="pullquote">
+  <span data-en="A folder of files.&nbsp;<span class='accent'>A laptop.</span>&nbsp;Some solar panels." data-fr="Un dossier de fichiers.&nbsp;<span class='accent'>Un laptop.</span>&nbsp;Quelques panneaux solaires.">A folder of files. <span class="accent">A laptop.</span> Some solar panels.</span>
+  <span class="sub" data-en="That's all it takes." data-fr="C'est tout ce qu'il faut.">That's all it takes.</span>
+</div>
+
+<section>
+  <div style="margin-top:20px; text-align:center;">
+    <a href="engine.html" class="cta" data-en="Back to the engine →" data-fr="Retour au moteur →">Back to the engine →</a>
+    <a href="game.html" class="cta ghost" data-en="Back to the game →" data-fr="Retour au jeu →">Back to the game →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="pages">
+    <a href="index.html" data-en="Overview" data-fr="Accueil">Overview</a> ·
+    <a href="game.html" data-en="The Game" data-fr="Le Jeu">The Game</a> ·
+    <a href="engine.html" data-en="The Engine" data-fr="Le Moteur">The Engine</a> ·
+    <a href="tech.html" data-en="Tech" data-fr="Tech">Tech</a>
+  </div>
+  <div data-en="© 2026 Galaxtarus · Made on a USB stick · Written with an AI" data-fr="© 2026 Galaxtarus · Fabriqué sur une clé USB · Écrit avec une IA">© 2026 Galaxtarus · Made on a USB stick · Written with an AI</div>
+</footer>
+
+<script src="i18n.js"></script>
+</body>
+</html>

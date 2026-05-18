@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Galaxtarus — The Game</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav class="top">
+  <div class="brand"><a href="index.html"><b>GALAXTARUS</b></a></div>
+  <div class="center">
+    <a href="index.html" data-en="Overview" data-fr="Accueil">Overview</a>
+    <a href="game.html" class="active" data-en="The Game" data-fr="Le Jeu">The Game</a>
+    <a href="engine.html" data-en="The Engine" data-fr="Le Moteur">The Engine</a>
+    <a href="tech.html" data-en="Tech" data-fr="Tech">Tech</a>
+  </div>
+  <div class="lang-toggle">
+    <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+    <button id="btn-fr" onclick="setLang('fr')">FR</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="pill" data-en="// THE GAME" data-fr="// LE JEU">// THE GAME</span>
+  <h1 data-en="You weren't supposed to&nbsp;<em>be alone.</em>" data-fr="Tu n'étais pas censé être&nbsp;<em>seul.</em>">You weren't supposed to&nbsp;<em>be alone.</em></h1>
+  <p class="tag" data-en="A 2D space survival story. No weapons. No HUD. One AI talks to you. Sixteen chapters from the wreckage to the gateway of light." data-fr="Une histoire de survie spatiale 2D. Aucune arme. Aucun HUD. Une IA te parle. Seize chapitres, des débris jusqu'au portail de lumière.">A 2D space survival story. No weapons. No HUD. One AI talks to you. Sixteen chapters from the wreckage to the gateway of light.</p>
+  <div>
+    <a href="#pledge" class="cta" data-en="Back on Kickstarter" data-fr="Soutenir le Kickstarter">Back on Kickstarter</a>
+    <a href="#story" class="cta ghost" data-en="Read the story" data-fr="Lire l'histoire">Read the story</a>
+  </div>
+</section>
+
+<!-- COLD OPEN -->
+<section id="story">
+  <span class="kicker" data-en="// COLD OPEN" data-fr="// SCÈNE D'OUVERTURE">// COLD OPEN</span>
+  <h2 data-en="The first image of the game is&nbsp;<em>debris.</em>" data-fr="La première image du jeu, c'est&nbsp;<em>des débris.</em>">The first image of the game is&nbsp;<em>debris.</em></h2>
+  <p class="lead" data-en="No briefing. No tutorial. No HUD. The rescue shuttle activated because something destroyed the ship you were on, and you happened to be close enough to one of the lifeboats." data-fr="Pas de briefing. Pas de tutoriel. Pas de HUD. La navette de secours s'est activée parce que quelque chose a détruit le vaisseau où tu étais, et tu étais assez près d'une chaloupe.">No briefing. No tutorial. No HUD. The rescue shuttle activated because something destroyed the ship you were on, and you happened to be close enough to one of the lifeboats.</p>
+  <p data-en="That's the story. You get it in one image, in silence, with nothing on screen but the slow rotation of the wreckage you used to call home. Every module you'll later pick up was dropped here, by people who came before you. They didn't make it out either." data-fr="C'est ça, l'histoire. Tu la reçois en une image, en silence, avec rien à l'écran sauf la rotation lente de l'épave que tu appelais maison. Chaque module que tu ramasseras a été laissé ici par ceux qui sont venus avant. Eux non plus ne sont pas sortis.">That's the story. You get it in one image, in silence, with nothing on screen but the slow rotation of the wreckage you used to call home. Every module you'll later pick up was dropped here, by people who came before you. They didn't make it out either.</p>
+  <p data-en="The rest you discover by surviving long enough to see it." data-fr="Le reste, tu le découvres en survivant assez longtemps pour le voir.">The rest you discover by surviving long enough to see it.</p>
+
+  <div class="imgph">
+    <div class="imgph-label" data-en="[ IMAGE — COLD OPEN ]" data-fr="[ IMAGE — OUVERTURE ]">[ IMAGE — COLD OPEN ]</div>
+    <div class="imgph-desc" data-en="Slow rotation of the destroyed mothership. The shuttle approaching from the right. Debris scattered. No UI." data-fr="Rotation lente du vaisseau-mère détruit. La navette qui s'approche de la droite. Débris éparpillés. Pas d'UI.">Slow rotation of the destroyed mothership. The shuttle approaching from the right. Debris scattered. No UI.</div>
+  </div>
+</section>
+
+<div class="divider"><hr/></div>
+
+<!-- THE SHUTTLE -->
+<section>
+  <div class="split reverse">
+    <div class="text">
+      <span class="kicker" data-en="// THE SHUTTLE" data-fr="// LA NAVETTE">// THE SHUTTLE</span>
+      <h2 data-en="A <span class='pink'>magenta triangle</span> in a galaxy of blue." data-fr="Un <span class='pink'>triangle magenta</span> dans une galaxie bleue.">A <span class="pink">magenta triangle</span> in a galaxy of blue.</h2>
+      <p class="lead" data-en="The shuttle is called Galaxtarus. She has no cannons. No turrets. No weapons of any kind." data-fr="La navette s'appelle Galaxtarus. Aucun canon. Aucune tourelle. Aucune arme.">The shuttle is called Galaxtarus. She has no cannons. No turrets. No weapons of any kind.</p>
+      <p data-en="She was built for one thing — keeping you alive in places where nothing else survives. Her color is deliberate. In this cold blue universe, she stands out. She's visible. She's fragile. She's alone." data-fr="Elle a été conçue pour une chose — te garder en vie là où rien d'autre ne survit. Sa couleur n'est pas un accident. Dans cet univers bleu et froid, elle tranche. Elle est visible. Elle est fragile. Elle est seule.">She was built for one thing — keeping you alive in places where nothing else survives. Her color is deliberate. In this cold blue universe, she stands out. She's visible. She's fragile. She's alone.</p>
+      <p data-en="You are the pilot. You have no name. You don't speak. The shuttle does what you tell her. Her inertia is real. Her engine over-heats if you push it. Every choice you make leaves a trail in the dark." data-fr="Tu es le pilote. Tu n'as pas de nom. Tu ne parles pas. La navette fait ce que tu lui dis. Son inertie est réelle. Son moteur surchauffe si tu pousses. Chaque choix que tu fais laisse une traîne dans le noir.">You are the pilot. You have no name. You don't speak. The shuttle does what you tell her. Her inertia is real. Her engine over-heats if you push it. Every choice you make leaves a trail in the dark.</p>
+    </div>
+    <div class="visual">
+      <svg width="100%" viewBox="0 0 500 500" style="display:block;">
+        <defs>
+          <radialGradient id="shipGlow"><stop offset="0%" stop-color="#ff4dd6" stop-opacity="0.35"/><stop offset="100%" stop-color="#ff4dd6" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect width="500" height="500" fill="#070b18"/>
+        <circle cx="250" cy="250" r="220" fill="url(#shipGlow)"/>
+        <circle class="star" cx="60" cy="80" r="1"/>
+        <circle class="star" cx="180" cy="50" r="1.4" style="animation-delay:0.5s"/>
+        <circle class="star" cx="380" cy="100" r="1" style="animation-delay:1s"/>
+        <circle class="star" cx="450" cy="200" r="1.2" style="animation-delay:1.5s"/>
+        <circle class="star" cx="80" cy="380" r="1" style="animation-delay:2s"/>
+        <circle class="star" cx="430" cy="420" r="1.3" style="animation-delay:0.3s"/>
+        <circle class="star" cx="250" cy="450" r="1" style="animation-delay:0.7s"/>
+        <ellipse cx="160" cy="250" rx="80" ry="6" fill="#ff4dd6" opacity="0.3"/>
+        <ellipse cx="190" cy="250" rx="50" ry="3" fill="#fff" opacity="0.55"/>
+        <g transform="translate(250,250) scale(2.4)" class="ship-drift">
+          <polygon points="0,-15 60,-8 80,0 60,8 0,15" fill="#ff4dd6" stroke="#fff" stroke-width="0.6"/>
+          <polygon points="35,-8 60,-3 70,0 60,3 35,8" fill="#1a0518"/>
+          <polygon points="60,-3 76,0 60,3" fill="#ff8de8"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- L.O.S. PULLQUOTE -->
+<div class="pullquote">
+  <span data-en="In this entire galaxy, exactly&nbsp;<span class='accent'>one voice speaks.</span>" data-fr="Dans cette galaxie entière, une&nbsp;<span class='accent'>seule voix parle.</span>">In this entire galaxy, exactly <span class="accent">one voice speaks.</span></span>
+  <span class="sub" data-en="His name is L.O.S." data-fr="Il s'appelle L.O.S.">His name is L.O.S.</span>
+</div>
+
+<!-- L.O.S. -->
+<section>
+  <div class="split">
+    <div class="visual">
+      <svg width="100%" viewBox="0 0 500 500" style="display:block;">
+        <defs>
+          <radialGradient id="losGlow"><stop offset="0%" stop-color="#4dffee" stop-opacity="0.18"/><stop offset="100%" stop-color="#4dffee" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect width="500" height="500" fill="#060911"/>
+        <circle cx="250" cy="260" r="200" fill="url(#losGlow)"/>
+        <circle class="star" cx="80" cy="80" r="1"/>
+        <circle class="star" cx="420" cy="100" r="1.2" style="animation-delay:0.5s"/>
+        <circle class="star" cx="60" cy="420" r="1" style="animation-delay:1.2s"/>
+        <circle class="star" cx="450" cy="440" r="1.3" style="animation-delay:1.8s"/>
+        <g class="los-portrait" transform="translate(250,260)">
+          <rect x="-100" y="-110" width="200" height="220" rx="14" fill="#0d1426" stroke="#4dffee" stroke-width="2"/>
+          <line x1="-50" y1="-110" x2="-50" y2="-140" stroke="#4dffee" stroke-width="2"/>
+          <circle cx="-50" cy="-145" r="4" fill="#ff4dd6"/>
+          <line x1="50" y1="-110" x2="50" y2="-140" stroke="#4dffee" stroke-width="2"/>
+          <circle cx="50" cy="-145" r="4" fill="#4dffee"/>
+          <rect x="-78" y="-80" width="156" height="120" rx="6" fill="#020610" stroke="#2ab8aa" stroke-width="1"/>
+          <rect x="-58" y="-50" width="36" height="10" fill="#4dffee"/>
+          <rect x="22" y="-46" width="36" height="10" fill="#4dffee" opacity="0.85"/>
+          <rect x="24" y="-44" width="36" height="10" fill="#ff4dd6" opacity="0.3"/>
+          <path d="M -50 10 L -30 8 L -15 18 L 0 6 L 18 18 L 35 10 L 55 14" stroke="#4dffee" stroke-width="2" fill="none"/>
+          <line x1="-78" y1="-20" x2="78" y2="-20" stroke="#4dffee" stroke-width="0.5" opacity="0.3"/>
+          <line x1="-78" y1="0" x2="78" y2="0" stroke="#4dffee" stroke-width="0.5" opacity="0.3"/>
+          <line x1="-78" y1="22" x2="78" y2="22" stroke="#4dffee" stroke-width="0.5" opacity="0.3"/>
+          <rect x="-120" y="120" width="240" height="40" rx="4" fill="#0d1426" stroke="#4dffee" stroke-width="1"/>
+          <text x="0" y="146" text-anchor="middle" font-family="Consolas,monospace" font-size="12" fill="#4dffee" letter-spacing="3">L.O.S</text>
+        </g>
+      </svg>
+    </div>
+    <div class="text">
+      <span class="kicker" data-en="// THE AI" data-fr="// L'IA">// THE AI</span>
+      <h2 data-en="He took care of <em>the garden.</em> He still takes care of someone." data-fr="Il s'occupait du <em>jardin.</em> Il s'occupe toujours de quelqu'un.">He took care of <em>the garden.</em> He still takes care of someone.</h2>
+      <p class="lead" data-en="L.O.S. was the gardener of the mothership's botanical bay. The garden is gone with the rest. He's the only voice left in the universe." data-fr="L.O.S. était le jardinier de la serre botanique du vaisseau-mère. Le jardin est parti avec le reste. Il est la seule voix qu'il reste dans l'univers.">L.O.S. was the gardener of the mothership's botanical bay. The garden is gone with the rest. He's the only voice left in the universe.</p>
+      <p data-en="He's damaged. He glitches mid-sentence. He grows weary. He cracks a joke right when you needed one. He addresses you like an old friend who never asked permission to be familiar — and the game never explains why. You'll feel it before you can name it." data-fr="Il est endommagé. Il glitche en pleine phrase. Il se lasse. Il sort une blague pile au moment où tu en avais besoin. Il te tutoie comme un vieil ami qui n'a jamais demandé la permission — et le jeu n'explique jamais pourquoi. Tu le sens avant de pouvoir le formuler.">He's damaged. He glitches mid-sentence. He grows weary. He cracks a joke right when you needed one. He addresses you like an old friend who never asked permission to be familiar — and the game never explains why. You'll feel it before you can name it.</p>
+      <p data-en="And then there's the part most studios would hide. <strong style='color:#fff'>His every line was written by an actual AI.</strong> We didn't think the AI in the game should sound human-written. We let one write him. Honest, on the box, on the page. The AI in the game is written by an AI." data-fr="Et puis il y a la chose que la plupart des studios cacheraient. <strong style='color:#fff'>Chaque ligne de L.O.S. a été écrite par une vraie IA.</strong> On ne voulait pas que l'IA du jeu sonne écrite par un humain. On en a laissé une l'écrire. C'est honnête, c'est sur la boîte, c'est sur la page. L'IA dans le jeu est écrite par une IA.">And then there's the part most studios would hide. <strong style="color:#fff">His every line was written by an actual AI.</strong> We didn't think the AI in the game should sound human-written. We let one write him. Honest, on the box, on the page. The AI in the game is written by an AI.</p>
+      <p class="sig" data-en="— tagline : &ldquo;Lonely. Together.&rdquo;" data-fr="— tagline : &laquo; La solitude avec une IA. &raquo;">— tagline : &ldquo;Lonely. Together.&rdquo;</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><hr/></div>
+
+<!-- THE LOOP -->
+<section>
+  <span class="kicker" data-en="// THE LOOP" data-fr="// LA BOUCLE">// THE LOOP</span>
+  <h2 data-en="You can't <span class='pink'>fight</span>. You can <em>outlast.</em>" data-fr="Tu ne peux pas <span class='pink'>combattre</span>. Tu peux <em>survivre.</em>">You can't <span class="pink">fight</span>. You can <em>outlast.</em></h2>
+  <p class="lead" data-en="There is no enemy you defeat in Galaxtarus. Only ones you survive long enough to leave behind." data-fr="Il n'y a aucun ennemi qu'on bat dans Galaxtarus. Seulement ceux qu'on survit assez longtemps pour les laisser derrière.">There is no enemy you defeat in Galaxtarus. Only ones you survive long enough to leave behind.</p>
+  <p data-en="You drift. You dodge. You read the spaces between asteroids. You bait predators into burning their reserves. You scavenge modules from those who came before — and went under. Every shield, every burst, every save-point was theirs first." data-fr="Tu dérives. Tu esquives. Tu lis les espaces entre les astéroïdes. Tu attires les prédateurs jusqu'à ce qu'ils épuisent leurs réserves. Tu récupères des modules sur ceux qui sont passés avant — et qui ont sombré. Chaque bouclier, chaque rafale, chaque balise de secours leur appartenait avant toi.">You drift. You dodge. You read the spaces between asteroids. You bait predators into burning their reserves. You scavenge modules from those who came before — and went under. Every shield, every burst, every save-point was theirs first.</p>
+  <p data-en="The shuttle starts crippled. The boost is locked. The tools are scattered. Each chapter unlocks one more piece of what Galaxtarus was supposed to be — until the moment you face the thing that's been hunting you the whole time." data-fr="La navette commence brisée. Le boost est verrouillé. Les outils sont éparpillés. Chaque chapitre débloque un morceau de ce que Galaxtarus était censée être — jusqu'au moment où tu fais face à ce qui te traquait depuis le début.">The shuttle starts crippled. The boost is locked. The tools are scattered. Each chapter unlocks one more piece of what Galaxtarus was supposed to be — until the moment you face the thing that's been hunting you the whole time.</p>
+
+  <div class="imgph">
+    <div class="imgph-label" data-en="[ GIF — DODGE LOOP ]" data-fr="[ GIF — BOUCLE D'ESQUIVE ]">[ GIF — DODGE LOOP ]</div>
+    <div class="imgph-desc" data-en="A 6-second loop. Shuttle weaving through asteroids. Boost burst. Shield pickup ignites. Caterpillar tail flickers at the edge of frame." data-fr="Une boucle de 6 secondes. La navette zigzague dans les astéroïdes. Coup de boost. Bouclier ramassé qui s'allume. Queue de chenille au bord du cadre.">A 6-second loop. Shuttle weaving through asteroids. Boost burst. Shield pickup ignites. Caterpillar tail flickers at the edge of frame.</div>
+  </div>
+</section>
+
+<!-- HAVOC -->
+<section>
+  <div class="split reverse">
+    <div class="text">
+      <span class="kicker" data-en="// HAVOC" data-fr="// HAVOC">// HAVOC</span>
+      <h2 data-en="Six legs. A diamond <span class='yellow'>eye.</span> No mercy. No malice." data-fr="Six pattes. Un œil en <span class='yellow'>losange.</span> Aucune pitié. Aucune malveillance.">Six legs. A diamond <span class="yellow">eye.</span> No mercy. No malice.</h2>
+      <p class="lead" data-en="The thing that guards the way out is yellow crystal. Angular. Deliberate. You don't fight it — you're a rescue shuttle. You run." data-fr="La chose qui garde la sortie est en cristal jaune. Angulaire. Méthodique. Tu ne combats pas — tu es une navette de secours. Tu fuis.">The thing that guards the way out is yellow crystal. Angular. Deliberate. You don't fight it — you're a rescue shuttle. You run.</p>
+      <p data-en="HAVOC is not evil. It's territorial. Whatever lies in the deep zone — the ancient monoliths, the pulsing star, the gateway of light — it doesn't want you near it. The eye charges. The eye fires. The eye recharges. You learn its rhythm, or you don't get to see the other side." data-fr="HAVOC n'est pas méchant. Il est territorial. Ce qui se trouve dans la zone profonde — les monolithes anciens, l'étoile qui pulse, le portail de lumière — il ne veut pas que tu t'en approches. L'œil charge. L'œil tire. L'œil recharge. Tu apprends son rythme, ou tu ne verras jamais l'autre côté.">HAVOC is not evil. It's territorial. Whatever lies in the deep zone — the ancient monoliths, the pulsing star, the gateway of light — it doesn't want you near it. The eye charges. The eye fires. The eye recharges. You learn its rhythm, or you don't get to see the other side.</p>
+    </div>
+    <div class="visual">
+      <svg width="100%" viewBox="0 0 500 500" style="display:block;">
+        <defs>
+          <radialGradient id="havocGlow"><stop offset="0%" stop-color="#ffcc44" stop-opacity="0.22"/><stop offset="100%" stop-color="#ffcc44" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect width="500" height="500" fill="#0a0a14"/>
+        <circle cx="250" cy="250" r="200" fill="url(#havocGlow)"/>
+        <circle class="star" cx="50" cy="60" r="1"/>
+        <circle class="star" cx="430" cy="80" r="1.2" style="animation-delay:0.4s"/>
+        <circle class="star" cx="80" cy="440" r="1" style="animation-delay:1s"/>
+        <circle class="star" cx="440" cy="430" r="1.2" style="animation-delay:1.5s"/>
+        <g transform="translate(250,250)">
+          <g stroke="#ffcc44" stroke-width="3" fill="none">
+            <line x1="0" y1="0" x2="-80" y2="-40"/><line x1="-80" y1="-40" x2="-140" y2="-80"/>
+            <line x1="0" y1="0" x2="-90" y2="0"/><line x1="-90" y1="0" x2="-160" y2="-20"/>
+            <line x1="0" y1="0" x2="-80" y2="40"/><line x1="-80" y1="40" x2="-140" y2="80"/>
+            <line x1="0" y1="0" x2="80" y2="-40"/><line x1="80" y1="-40" x2="140" y2="-80"/>
+            <line x1="0" y1="0" x2="90" y2="0"/><line x1="90" y1="0" x2="160" y2="-20"/>
+            <line x1="0" y1="0" x2="80" y2="40"/><line x1="80" y1="40" x2="140" y2="80"/>
+          </g>
+          <g fill="#ffcc44">
+            <circle cx="-80" cy="-40" r="3"/><circle cx="-90" cy="0" r="3"/><circle cx="-80" cy="40" r="3"/>
+            <circle cx="80" cy="-40" r="3"/><circle cx="90" cy="0" r="3"/><circle cx="80" cy="40" r="3"/>
+          </g>
+          <polygon points="-30,-50 0,-65 30,-50 40,-20 30,15 0,25 -30,15 -40,-20" fill="#ffcc44" stroke="#fff" stroke-width="1" opacity="0.95"/>
+          <polygon points="-20,-40 0,-50 20,-40 25,-15 0,0 -25,-15" fill="#ffaa22" stroke="#ffcc44" stroke-width="0.5"/>
+          <polygon points="-10,-25 8,-30 15,-12 0,-5 -15,-12" fill="#ffe888" stroke="#fff" stroke-width="0.5"/>
+          <g class="havoc-eye">
+            <polygon points="0,-15 16,-2 0,12 -16,-2" fill="#fff" stroke="#ffcc44" stroke-width="1.5"/>
+            <polygon points="0,-9 9,-2 0,6 -9,-2" fill="#ffcc44"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 16 CHAPTERS -->
+<section>
+  <span class="kicker" data-en="// THE JOURNEY · 16 CHAPTERS" data-fr="// LA TRAVERSÉE · 16 CHAPITRES">// THE JOURNEY · 16 CHAPTERS</span>
+  <h2 data-en="A <em>shipwreck story.</em> In sixteen chapters." data-fr="Une <em>histoire de naufragé.</em> En seize chapitres.">A <em>shipwreck story.</em> In sixteen chapters.</h2>
+  <p class="lead" data-en="Galaxtarus is structured as a survivor's journey — the oldest story we tell. From the first breath after the crash to whatever lies beyond the last gate." data-fr="Galaxtarus suit la structure du voyage du naufragé — la plus vieille histoire qu'on raconte. Du premier souffle après le crash jusqu'à ce qui se trouve derrière la dernière porte.">Galaxtarus is structured as a survivor's journey — the oldest story we tell. From the first breath after the crash to whatever lies beyond the last gate.</p>
+
+  <div class="chapters-grid">
+    <div class="chapter locked"><div class="num">01</div><div class="ttl" data-en="The comfort" data-fr="Le confort">The comfort</div></div>
+    <div class="chapter locked"><div class="num">02</div><div class="ttl" data-en="The disaster" data-fr="Le désastre">The disaster</div></div>
+    <div class="chapter played"><div class="num" data-en="03 · DEMO" data-fr="03 · DÉMO">03 · DEMO</div><div class="ttl" data-en="The Awakening" data-fr="L'Éveil">The Awakening</div></div>
+    <div class="chapter locked"><div class="num">04</div><div class="ttl" data-en="Inventory" data-fr="L'inventaire">Inventory</div></div>
+    <div class="chapter locked"><div class="num">05</div><div class="ttl" data-en="Adaptation" data-fr="L'adaptation">Adaptation</div></div>
+    <div class="chapter locked"><div class="num">06</div><div class="ttl" data-en="The first trace" data-fr="La première trace">The first trace</div></div>
+    <div class="chapter played"><div class="num" data-en="07 · DEMO" data-fr="07 · DÉMO">07 · DEMO</div><div class="ttl" data-en="The Caterpillar" data-fr="La Chenille">The Caterpillar</div></div>
+    <div class="chapter locked"><div class="num">08</div><div class="ttl" data-en="The routine" data-fr="La routine">The routine</div></div>
+    <div class="chapter played"><div class="num" data-en="09 · DEMO" data-fr="09 · DÉMO">09 · DEMO</div><div class="ttl" data-en="The Puzzle" data-fr="Le Casse-tête">The Puzzle</div></div>
+    <div class="chapter locked"><div class="num">10</div><div class="ttl" data-en="The separation" data-fr="La séparation">The separation</div></div>
+    <div class="chapter locked"><div class="num">11</div><div class="ttl" data-en="Total isolation" data-fr="L'isolement total">Total isolation</div></div>
+    <div class="chapter locked"><div class="num">12</div><div class="ttl" data-en="The search for L.O.S." data-fr="La quête de L.O.S.">The search for L.O.S.</div></div>
+    <div class="chapter played"><div class="num" data-en="13 · DEMO" data-fr="13 · DÉMO">13 · DEMO</div><div class="ttl" data-en="All Seems Lost" data-fr="All Seems Lost">All Seems Lost</div></div>
+    <div class="chapter locked"><div class="num">14</div><div class="ttl" data-en="The crossing" data-fr="La traversée">The crossing</div></div>
+    <div class="chapter locked"><div class="num">15</div><div class="ttl" data-en="HAVOC" data-fr="HAVOC">HAVOC</div></div>
+    <div class="chapter locked"><div class="num">16</div><div class="ttl" data-en="The threshold" data-fr="Le seuil">The threshold</div></div>
+  </div>
+
+  <p data-en="The demo plays four chapters — pulled from across the arc. Chapter 3: the awakening. Chapter 7: the caterpillar that hunts you. Chapter 9: the puzzle and the first whisper of HAVOC. Chapter 13: all seems lost. The twelve remaining wait under the menu — locked, named, present, like things you can almost remember from a life that was supposed to happen." data-fr="La démo joue quatre chapitres — pris à des moments-clés de l'arc. Chapitre 3 : l'éveil. Chapitre 7 : la chenille qui te traque. Chapitre 9 : le casse-tête et le premier murmure de HAVOC. Chapitre 13 : tout semble perdu. Les douze autres attendent sous le menu — verrouillés, nommés, présents, comme des choses qu'on se rappelle presque, d'une vie qui aurait dû arriver.">The demo plays four chapters — pulled from across the arc. Chapter 3: the awakening. Chapter 7: the caterpillar that hunts you. Chapter 9: the puzzle and the first whisper of HAVOC. Chapter 13: all seems lost. The twelve remaining wait under the menu — locked, named, present, like things you can almost remember from a life that was supposed to happen.</p>
+  <p class="sig" data-en="— in the lineage of The Odyssey, Robinson Crusoe, Gravity, The Martian, Moon, Solaris." data-fr="— dans la lignée de L'Odyssée, Robinson Crusoé, Gravity, Seul sur Mars, Moon, Solaris.">— in the lineage of The Odyssey, Robinson Crusoe, Gravity, The Martian, Moon, Solaris.</p>
+</section>
+
+<div class="divider"><hr/></div>
+
+<!-- PLEDGE -->
+<section id="pledge">
+  <span class="kicker" data-en="// KICKSTARTER 2026" data-fr="// KICKSTARTER 2026">// KICKSTARTER 2026</span>
+  <h2 data-en="A <span class='pink'>USB stick</span>, a game, an engine, and a&nbsp;hand-carved&nbsp;chest." data-fr="Une <span class='pink'>clé USB</span>, un jeu, un moteur, et un coffret&nbsp;sculpté&nbsp;main.">A <span class="pink">USB stick</span>, a game, an engine, and a hand-carved chest.</h2>
+  <p class="lead" data-en="Four tiers. The Hand-Carved Chest is the one we're proudest of. Raphaël, who built the game, is also an internationally recognized chip carver. Each chest is sculpted by hand, with the shuttle engraved on the lid. Limited to 30." data-fr="Quatre paliers. Le Coffret Sculpté à la Main est celui dont on est le plus fier. Raphaël, qui a fait le jeu, est aussi un chip carver reconnu à l'international. Chaque coffret est sculpté à la main, avec la navette gravée sur le couvercle. Limité à 30 exemplaires.">Four tiers. The Hand-Carved Chest is the one we're proudest of. Raphaël, who built the game, is also an internationally recognized chip carver. Each chest is sculpted by hand, with the shuttle engraved on the lid. Limited to 30.</p>
+
+  <div class="pledge-strip">
+    <div class="tier">
+      <div class="price">$10</div>
+      <div class="name" data-en="Digital" data-fr="Numérique">Digital</div>
+      <div class="desc" data-en="The full game, download, name in the credits." data-fr="Le jeu complet, téléchargement, ton nom dans les crédits.">The full game, download, name in the credits.</div>
+    </div>
+    <div class="tier">
+      <div class="price">$35</div>
+      <div class="name" data-en="USB Standard" data-fr="USB Standard">USB Standard</div>
+      <div class="desc" data-en="A real USB stick. Boot screen, retro vibes. Plug it in anywhere." data-fr="Une vraie clé USB. Écran de boot, vibes rétro. Branche-la où tu veux.">A real USB stick. Boot screen, retro vibes. Plug it in anywhere.</div>
+    </div>
+    <div class="tier">
+      <div class="price">$65</div>
+      <div class="name" data-en="USB Deluxe" data-fr="USB Deluxe">USB Deluxe</div>
+      <div class="desc" data-en="The game, the engine source, every editor we built, and the dev notes (.md). Build your own galaxy." data-fr="Le jeu, le code source du moteur, tous les éditeurs, et les notes de dev (.md). Construis ta propre galaxie.">The game, the engine source, every editor we built, and the dev notes (.md). Build your own galaxy.</div>
+    </div>
+    <div class="tier signature">
+      <div class="price">$200</div>
+      <div class="name" data-en="Hand-carved chest · 30 max" data-fr="Coffret sculpté · 30 max">Hand-carved chest · 30 max</div>
+      <div class="desc" data-en="A wooden chest sculpted by hand. The shuttle engraved on the lid. USB inside with everything. Signed and numbered." data-fr="Un coffret en bois sculpté à la main. La navette gravée sur le couvercle. Clé USB à l'intérieur avec tout dedans. Signé et numéroté.">A wooden chest sculpted by hand. The shuttle engraved on the lid. USB inside with everything. Signed and numbered.</div>
+    </div>
+  </div>
+
+  <div class="imgph">
+    <div class="imgph-label" data-en="[ PHOTO — HAND-CARVED CHEST ]" data-fr="[ PHOTO — COFFRET SCULPTÉ ]">[ PHOTO — HAND-CARVED CHEST ]</div>
+    <div class="imgph-desc" data-en="Hand-carved wooden chest on a dark background. Warm light. The shuttle engraved on the lid. USB stick visible peeking out." data-fr="Coffret en bois sculpté à la main sur fond sombre. Lumière chaude. La navette gravée sur le couvercle. Clé USB visible qui dépasse légèrement.">Hand-carved wooden chest on a dark background. Warm light. The shuttle engraved on the lid. USB stick visible peeking out.</div>
+  </div>
+
+  <div style="margin-top:40px; text-align:center;">
+    <a href="#" class="cta" data-en="Get notified when it opens" data-fr="Prévenez-moi du lancement">Get notified when it opens</a>
+  </div>
+</section>
+
+<footer>
+  <div class="pages">
+    <a href="index.html" data-en="Overview" data-fr="Accueil">Overview</a> ·
+    <a href="game.html" data-en="The Game" data-fr="Le Jeu">The Game</a> ·
+    <a href="engine.html" data-en="The Engine" data-fr="Le Moteur">The Engine</a> ·
+    <a href="tech.html" data-en="Tech" data-fr="Tech">Tech</a>
+  </div>
+  <div data-en="© 2026 Galaxtarus · Made on a USB stick · Written with an AI" data-fr="© 2026 Galaxtarus · Fabriqué sur une clé USB · Écrit avec une IA">© 2026 Galaxtarus · Made on a USB stick · Written with an AI</div>
+</footer>
+
+<script src="i18n.js"></script>
+</body>
+</html>

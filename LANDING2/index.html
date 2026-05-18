@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Galaxtarus — A game, an engine, and a wooden box</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav class="top">
+  <div class="brand"><a href="index.html"><b>GALAXTARUS</b></a></div>
+  <div class="center">
+    <a href="index.html" class="active" data-en="Overview" data-fr="Accueil">Overview</a>
+    <a href="game.html" data-en="The Game" data-fr="Le Jeu">The Game</a>
+    <a href="engine.html" data-en="The Engine" data-fr="Le Moteur">The Engine</a>
+    <a href="tech.html" data-en="Tech" data-fr="Tech">Tech</a>
+  </div>
+  <div class="lang-toggle">
+    <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+    <button id="btn-fr" onclick="setLang('fr')">FR</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="pill" data-en="Space survival · Engine · Wood · Kickstarter 2026" data-fr="Survie spatiale · Moteur · Bois · Kickstarter 2026">Space survival · Engine · Wood · Kickstarter 2026</span>
+  <h1 data-en="A <em>game.</em> An <span class='cyan'>engine.</span> A <span class='yellow'>hand-carved&nbsp;box.</span>" data-fr="Un <em>jeu.</em> Un <span class='cyan'>moteur.</span> Une <span class='yellow'>boîte sculptée&nbsp;à la main.</span>">A <em>game.</em> An <span class="cyan">engine.</span> A <span class="yellow">hand-carved box.</span></h1>
+  <p class="tag" data-en="Three artefacts in one folder. Made by hand, without a build step, without a server, without a cloud. The whole thing runs from a USB stick — worst case it works, best case it works anyway." data-fr="Trois artefacts dans un même dossier. Faits à la main, sans build, sans serveur, sans cloud. Tout ça tourne depuis une clé USB — au pire ça marche, au mieux ça marche aussi.">Three artefacts in one folder. Made by hand, without a build step, without a server, without a cloud. The whole thing runs from a USB stick — worst case it works, best case it works anyway.</p>
+  <div>
+    <a href="game.html" class="cta" data-en="See the game" data-fr="Voir le jeu">See the game</a>
+    <a href="engine.html" class="cta ghost" data-en="See the engine" data-fr="Voir le moteur">See the engine</a>
+  </div>
+</section>
+
+<!-- THREE PATHS -->
+<div class="paths">
+  <a href="game.html" class="path">
+    <div class="pkicker" data-en="// PATH 01" data-fr="// VOIE 01">// PATH 01</div>
+    <div class="ptitle" data-en="The <em>game</em>" data-fr="Le <em>jeu</em>">The <em>game</em></div>
+    <div class="pdesc" data-en="A 2D space survival story. A magenta rescue shuttle. A robot that's been with you since before the crash. No weapons. Sixteen chapters." data-fr="Une histoire de survie spatiale 2D. Une navette de secours magenta. Un robot qui est avec toi depuis avant le crash. Aucune arme. Seize chapitres.">A 2D space survival story. A magenta rescue shuttle. A robot that's been with you since before the crash. No weapons. Sixteen chapters.</div>
+    <div class="parrow" data-en="Read the story →" data-fr="Lire l'histoire →">Read the story →</div>
+  </a>
+  <a href="engine.html" class="path">
+    <div class="pkicker" data-en="// PATH 02" data-fr="// VOIE 02">// PATH 02</div>
+    <div class="ptitle" data-en="The <span class='cyan'>engine</span>" data-fr="Le <span class='cyan'>moteur</span>">The <span class="cyan">engine</span></div>
+    <div class="pdesc" data-en="Pure ES6 classes. No build, no bundler, no server. The engine ships with the game. Open it, read it, make your own game with it." data-fr="Vraies classes ES6. Pas de build, pas de bundler, pas de serveur. Le moteur est livré avec le jeu. Ouvre-le, lis-le, fais ton propre jeu avec.">Pure ES6 classes. No build, no bundler, no server. The engine ships with the game. Open it, read it, make your own game with it.</div>
+    <div class="parrow" data-en="See the engine →" data-fr="Voir le moteur →">See the engine →</div>
+  </a>
+  <a href="tech.html" class="path">
+    <div class="pkicker" data-en="// PATH 03" data-fr="// VOIE 03">// PATH 03</div>
+    <div class="ptitle" data-en="The <span class='yellow'>how</span>" data-fr="Le <span class='yellow'>comment</span>">The <span class="yellow">how</span></div>
+    <div class="pdesc" data-en="The technical philosophy. Why file://. Why vanilla. Why MIDI. Why hand-carved wood. The decisions, in one place, with code snippets." data-fr="La philosophie technique. Pourquoi file://. Pourquoi vanilla. Pourquoi MIDI. Pourquoi du bois sculpté à la main. Les décisions, dans un seul endroit, avec snippets de code.">The technical philosophy. Why file://. Why vanilla. Why MIDI. Why hand-carved wood. The decisions, in one place, with code snippets.</div>
+    <div class="parrow" data-en="Read the manifesto →" data-fr="Lire le manifeste →">Read the manifesto →</div>
+  </a>
+</div>
+
+<!-- PULL QUOTE -->
+<div class="pullquote">
+  <span data-en="One folder. <span class='accent'>Three artefacts.</span> No internet required." data-fr="Un dossier. <span class='accent'>Trois artefacts.</span> Pas d'internet requis.">One folder. <span class="accent">Three artefacts.</span> No internet required.</span>
+  <span class="sub" data-en="A game. An engine. A wooden box you can hold." data-fr="Un jeu. Un moteur. Une boîte en bois qu'on peut tenir.">A game. An engine. A wooden box you can hold.</span>
+</div>
+
+<!-- SHIP TEASER VISUAL -->
+<section>
+  <span class="kicker" data-en="// AT A GLANCE" data-fr="// EN BREF">// AT A GLANCE</span>
+  <h2 data-en="One shuttle. One voice. <em>One galaxy</em> to escape." data-fr="Une navette. Une voix. <em>Une galaxie</em> à fuir.">One shuttle. One voice. <em>One galaxy</em> to escape.</h2>
+  <p class="lead" data-en="The mothership is gone. You weren't supposed to be alone. The rescue shuttle Galaxtarus answers — no cannons, no comms, no map. One AI talks to you. Something else is awake out here." data-fr="Le vaisseau-mère a été détruit. Tu n'étais pas censé être seul. La navette de secours Galaxtarus répond — sans canons, sans radio, sans carte. Une seule IA te parle. Et quelque chose d'autre est éveillé dehors.">The mothership is gone. You weren't supposed to be alone. The rescue shuttle Galaxtarus answers — no cannons, no comms, no map. One AI talks to you. Something else is awake out here.</p>
+
+  <div class="imgph">
+    <div class="imgph-label" data-en="[ IMAGE — HERO SHOT ]" data-fr="[ IMAGE — VUE D'ENSEMBLE ]">[ IMAGE — HERO SHOT ]</div>
+    <div class="imgph-desc" data-en="Magenta shuttle drifting past a large nebula. Coordinates visible faintly. Stars. The whole vibe in one frame." data-fr="Navette magenta dérivant devant une grande nébuleuse. Coordonnées en filigrane. Étoiles. Toute l'ambiance en une image.">Magenta shuttle drifting past a large nebula. Coordinates visible faintly. Stars. The whole vibe in one frame.</div>
+  </div>
+
+  <div style="margin-top:40px;">
+    <a href="game.html" class="cta" data-en="Continue to the game →" data-fr="Continuer vers le jeu →">Continue to the game →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="pages">
+    <a href="index.html" data-en="Overview" data-fr="Accueil">Overview</a> ·
+    <a href="game.html" data-en="The Game" data-fr="Le Jeu">The Game</a> ·
+    <a href="engine.html" data-en="The Engine" data-fr="Le Moteur">The Engine</a> ·
+    <a href="tech.html" data-en="Tech" data-fr="Tech">Tech</a>
+  </div>
+  <div data-en="© 2026 Galaxtarus · Made on a USB stick · Written with an AI" data-fr="© 2026 Galaxtarus · Fabriqué sur une clé USB · Écrit avec une IA">© 2026 Galaxtarus · Made on a USB stick · Written with an AI</div>
+</footer>
+
+<script src="i18n.js"></script>
+</body>
+</html>
