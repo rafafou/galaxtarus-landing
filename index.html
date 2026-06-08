@@ -4,89 +4,1668 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Galaxtarus — A game, an engine, and a wooden box</title>
+<meta name="description" content="A 2D space-survival story, a reusable game engine, and a hand-carved wooden box — one folder that runs from a USB stick. No build, no server. Kickstarter 2026." />
+<link rel="canonical" href="https://www.galaxtarus.com/" />
+
+<!-- Favicon / icônes (triangle magenta = la navette) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%230a1124'/%3E%3Cpath%20d='M32%2013L46%2049L32%2041L18%2049Z'%20fill='%23ff4dd6'/%3E%3C/svg%3E" />
+<link rel="icon" type="image/png" sizes="180x180" href="icon-180.png" />
+<link rel="apple-touch-icon" href="icon-180.png" />
+
+<!-- Open Graph — aperçu quand le lien est partagé (Facebook, Discord, etc.). -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://www.galaxtarus.com/" />
+<meta property="og:site_name" content="Galaxtarus" />
+<meta property="og:title" content="Galaxtarus — A game, an engine, and a wooden box" />
+<meta property="og:description" content="A 2D space-survival story, a reusable game engine, and a hand-carved wooden box — one folder that runs from a USB stick. No build, no server. Kickstarter 2026." />
+<meta property="og:image" content="https://www.galaxtarus.com/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Galaxtarus — A game, an engine, and a wooden box" />
+<meta name="twitter:description" content="A 2D space-survival game, a reusable engine, and a hand-carved wooden box. Runs from a USB stick. Kickstarter 2026." />
+<meta name="twitter:image" content="https://www.galaxtarus.com/og-image.png" />
+
 <link rel="stylesheet" href="styles.css" />
+<style>
+  /* ── Brand — titre principal ────────────────────────────────────────────── */
+  nav.top .brand {
+    font-size: 52px; letter-spacing: 10px;
+    text-shadow: 0 0 24px rgba(255,77,214,0.6), 0 0 60px rgba(192,101,255,0.35);
+  }
+  nav.top .brand b { font-weight: 900; color: #fff; }
+
+  /* ── Indicateur nav glissant ─────────────────────────────────────────────── */
+  nav.top .center { position: relative; }
+  #nav-indicator {
+    position: absolute; bottom: -6px; height: 2px;
+    background: var(--magenta);
+    box-shadow: 0 0 10px rgba(255,77,214,0.8), 0 0 20px rgba(255,77,214,0.4);
+    transition: left 0.35s cubic-bezier(0.25,0.46,0.45,0.94),
+                width 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+    pointer-events: none;
+  }
+  /* Supprimer l'ancien border-bottom statique */
+  nav.top .center a.active { border-bottom: none !important; color: #fff; }
+  /* Hover fluide */
+  nav.top .center a { transition: color 0.2s ease; }
+
+  /* ── Views ──────────────────────────────────────────────────────────────── */
+  .view { display:none; }
+  .view.active { display:block; }
+  .view.slide-from-right { animation: slideRight 0.42s cubic-bezier(0.25,0.46,0.45,0.94) both; }
+  .view.slide-from-left  { animation: slideLeft  0.42s cubic-bezier(0.25,0.46,0.45,0.94) both; }
+  @keyframes slideRight { from { opacity:0; transform:translateX(48px);  } to { opacity:1; transform:translateX(0); } }
+  @keyframes slideLeft  { from { opacity:0; transform:translateX(-48px); } to { opacity:1; transform:translateX(0); } }
+
+  /* ── Nebula canvas + z-index ─────────────────────────────────────────────── */
+  #nebula-bg { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+  .view, footer { position:relative; z-index:1; }
+  /* Header fixe : reste visible au scroll (on ne perd plus le menu). */
+  nav.top { position:fixed; top:0; left:0; right:0; z-index:100; }
+
+  /* ── Music button + playing pulse ────────────────────────────────────────── */
+  .music-btn {
+    background:transparent; border:1px solid var(--cyan); color:var(--cyan);
+    font-family:'Consolas',monospace; font-size:10px; letter-spacing:2px;
+    padding:5px 12px; cursor:pointer; text-transform:uppercase;
+    transition:background 0.2s, color 0.2s, box-shadow 0.2s;
+    margin-left:16px; white-space:nowrap;
+  }
+  .music-btn:hover { background:var(--cyan); color:var(--bg-0); }
+  .music-btn.playing {
+    animation: musicPulse 2.2s ease-in-out infinite;
+    border-color:var(--cyan);
+  }
+  @keyframes musicPulse {
+    0%,100% { box-shadow:0 0 0 0 rgba(77,255,238,0.5); }
+    50%      { box-shadow:0 0 0 10px rgba(77,255,238,0); }
+  }
+
+  /* ── CTA shimmer ─────────────────────────────────────────────────────────── */
+  .cta { position:relative; overflow:hidden; }
+  .cta::after {
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.09) 50%, transparent 60%);
+    transform:translateX(-100%); transition:transform 0.55s ease;
+  }
+  .cta:hover::after { transform:translateX(100%); }
+
+  /* ── Fade-in (containers) ───────────────────────────────────────────────── */
+  .fade-in { opacity:0; transform:translateY(28px); transition:opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1); }
+  .fade-in.visible { opacity:1; transform:translateY(0); }
+
+  /* ── Path cards 3D ───────────────────────────────────────────────────────── */
+  .path { transform-style:preserve-3d; will-change:transform; transition:transform 0.18s ease, border-color 0.25s, box-shadow 0.25s; }
+  .path:hover { box-shadow:0 8px 40px rgba(255,77,214,0.18); }
+
+  /* ── Hero entrance au changement de vue ─────────────────────────────────── */
+  @keyframes heroBlurUp    { from { opacity:0; filter:blur(6px); } to { opacity:1; filter:blur(0); } }
+  @keyframes heroFadeIn    { from { opacity:0; } to { opacity:1; } }
+  .hero-animate .pill { animation: heroFadeIn  0.55s ease 0.04s both; }
+  .hero-animate h1    { animation: heroBlurUp  0.85s cubic-bezier(0.16,1,0.3,1) 0.12s both; }
+  .hero-animate .tag  { animation: heroFadeIn  0.65s ease 0.28s both; }
+  .hero-animate > div { animation: heroFadeIn  0.55s ease 0.46s both; }
+
+  /* ── H2 hover glow ───────────────────────────────────────────────────────── */
+  section h2 { transition: text-shadow 0.35s ease; cursor:default; }
+  section h2:hover { text-shadow: 0 0 48px rgba(255,77,214,0.30), 0 0 80px rgba(192,101,255,0.15); }
+
+  /* ── Pullquote — scale + fade ────────────────────────────────────────────── */
+  .pullquote.fade-in { transform: scale(0.97) translateY(20px); transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1); }
+  .pullquote.visible { transform: scale(1) translateY(0) !important; }
+
+  /* ── Kicker hover ────────────────────────────────────────────────────────── */
+  .kicker { transition: letter-spacing 0.3s ease, opacity 0.3s ease; }
+  .kicker:hover { letter-spacing: 7px; }
+</style>
 </head>
 <body>
 
-<nav class="top">
-  <div class="brand"><a href="index.html"><b>GALAXTARUS</b></a></div>
-  <div class="center">
-    <a href="index.html" class="active" data-en="Overview" data-fr="Accueil">Overview</a>
-    <a href="game.html" data-en="The Game" data-fr="Le Jeu">The Game</a>
-    <a href="engine.html" data-en="The Engine" data-fr="Le Moteur">The Engine</a>
-    <a href="tech.html" data-en="Tech" data-fr="Tech">Tech</a>
+<!-- Écran de boot rétro (intro). Recouvre la page au chargement puis se fond. -->
+<div id="boot" aria-hidden="true">
+  <pre id="boot-log"></pre>
+  <div class="skip" data-en="press a key to skip" data-fr="touche pour passer">touche pour passer</div>
+</div>
+
+<canvas id="nebula-bg"></canvas>
+
+<!-- Grain de film subtil (texture premium) — overlay non cliquable -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- L.O.S. — l'IA qui pointe le museau en bas à gauche et lâche un message aléatoire -->
+<div id="los" aria-hidden="true">
+  <div id="los-bubble" class="los-bubble"></div>
+  <div id="los-bot" class="los-bot" title="L.O.S."></div>
+</div>
+
+<!-- Barre sociale fixe (bord droit) — mêmes canaux que le footer, liens placeholders -->
+<nav id="social" class="social" aria-label="Social links" data-en-aria="Social links" data-fr-aria="Réseaux sociaux">
+  <a class="social-link" href="mailto:jackmaltais@outlook.com" data-tip="Email" aria-label="Email" style="--c:var(--cyan)">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 8 8 5.5L20 8"/></svg>
+  </a>
+  <a class="social-link" href="https://www.reddit.com/user/Cold-Satisfaction379/" target="_blank" rel="noopener" data-tip="Reddit" aria-label="Reddit" style="--c:var(--magenta)">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="14" r="6.5"/><circle cx="9.4" cy="13.5" r="1.05" fill="currentColor" stroke="none"/><circle cx="14.6" cy="13.5" r="1.05" fill="currentColor" stroke="none"/><path d="M12 7.5V4.2l3.4 1"/><circle cx="16" cy="5.3" r="1.1"/><path d="M9.5 16.4c1.5 1 3.5 1 5 0"/></svg>
+  </a>
+  <a class="social-link" href="https://discord.gg/tXhm76XFzF" target="_blank" rel="noopener" data-tip="Discord" aria-label="Discord" style="--c:var(--magenta-glow)">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7.6c1.6-.8 3.2-1.1 5-1.1s3.4.3 5 1.1c1.6 2 2.4 4.4 2.3 7.3-1.3 1-2.7 1.7-4.2 2.1l-.9-1.6m-4.4 0-.9 1.6c-1.5-.4-2.9-1.1-4.2-2.1-.1-2.9.7-5.3 2.3-7.3"/><ellipse cx="9.5" cy="13" rx="1.1" ry="1.5" fill="currentColor" stroke="none"/><ellipse cx="14.5" cy="13" rx="1.1" ry="1.5" fill="currentColor" stroke="none"/></svg>
+  </a>
+  <a class="social-link" href="#" data-tip="Facebook" aria-label="Facebook" style="--c:var(--cyan)">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><path d="M14.5 8.2h-1.4c-1 0-1.6.6-1.6 1.6V11H14l-.4 2.6h-2.1V20"/></svg>
+  </a>
+</nav>
+
+<!-- Tooltip dynamique qui suit le curseur (rempli en JS) -->
+<div id="cursor-tip" aria-hidden="true"></div>
+
+<!-- Capture email — fenêtre ouverte par « Prévenez-moi du lancement » -->
+<div id="notify" class="notify" aria-hidden="true">
+  <div class="notify-box" role="dialog" aria-modal="true" aria-label="Get notified at launch" data-en-aria="Get notified at launch" data-fr-aria="Être prévenu du lancement">
+    <button class="notify-close" id="notify-close" type="button" aria-label="Close" data-en-aria="Close" data-fr-aria="Fermer">&times;</button>
+    <span class="notify-kicker" data-en="// LAUNCH ALERT" data-fr="// ALERTE LANCEMENT">// ALERTE LANCEMENT</span>
+    <h3 class="notify-title" data-en="Be first when it launches." data-fr="Sois prévenu au lancement.">Sois prévenu au lancement.</h3>
+    <p class="notify-sub" data-en="One email when the Kickstarter goes live. Nothing else, ever." data-fr="Un seul email quand le Kickstarter démarre. Rien d'autre, jamais.">Un seul email quand le Kickstarter démarre. Rien d'autre, jamais.</p>
+    <form id="notify-form" novalidate>
+      <input type="email" id="notify-email" name="email_address" required placeholder="ton@email.com" autocomplete="email" />
+      <button type="submit" class="notify-submit" data-en="Notify me" data-fr="Préviens-moi">Préviens-moi</button>
+    </form>
+    <p class="notify-msg" id="notify-msg" aria-live="polite"></p>
   </div>
+</div>
+
+<nav class="top">
+  <button id="btn-music" class="music-btn" onclick="toggleMusic()" data-en="&#9654; &nbsp;MUSIC" data-fr="&#9654; &nbsp;MUSIQUE">&#9654; &nbsp;MUSIC</button>
+  <div class="brand"><b>GALAXTARUS</b></div>
+  <div class="center">
+    <a href="#" data-view="overview" class="active" data-en="Overview"   data-fr="Accueil">Overview</a>
+    <a href="#" data-view="game"                    data-en="The Game"   data-fr="Le Jeu">The Game</a>
+    <a href="#" data-view="engine"                  data-en="The Engine" data-fr="Le Moteur">The Engine</a>
+    <a href="#" data-view="tech"                    data-en="Tech"       data-fr="Tech">Tech</a>
+    <a href="#" data-view="survivable"              data-en="Survivable" data-fr="Survivable">Survivable</a>
+    <a href="#" data-view="manifesto"               data-en="Manifesto"  data-fr="Manifeste">Manifesto</a>
+    <div id="nav-indicator"></div>
+  </div>
+  <button id="notify-trigger" class="notify-btn" type="button" data-en="Notify me" data-fr="M'alerter">Notify me</button>
   <div class="lang-toggle">
     <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
     <button id="btn-fr" onclick="setLang('fr')">FR</button>
   </div>
+  <!-- Hamburger : visible uniquement sur mobile (≤820px), desktop inchangé -->
+  <button id="nav-burger" class="nav-burger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <span class="pill" data-en="Space survival · Engine · Wood · Kickstarter 2026" data-fr="Survie spatiale · Moteur · Bois · Kickstarter 2026">Space survival · Engine · Wood · Kickstarter 2026</span>
-  <h1 data-en="A <em>game.</em> An <span class='cyan'>engine.</span> A <span class='yellow'>hand-carved&nbsp;box.</span>" data-fr="Un <em>jeu.</em> Un <span class='cyan'>moteur.</span> Une <span class='yellow'>boîte sculptée&nbsp;à la main.</span>">A <em>game.</em> An <span class="cyan">engine.</span> A <span class="yellow">hand-carved box.</span></h1>
-  <p class="tag" data-en="Three artefacts in one folder. Made by hand, without a build step, without a server, without a cloud. The whole thing runs from a USB stick — worst case it works, best case it works anyway." data-fr="Trois artefacts dans un même dossier. Faits à la main, sans build, sans serveur, sans cloud. Tout ça tourne depuis une clé USB — au pire ça marche, au mieux ça marche aussi.">Three artefacts in one folder. Made by hand, without a build step, without a server, without a cloud. The whole thing runs from a USB stick — worst case it works, best case it works anyway.</p>
-  <div>
-    <a href="game.html" class="cta" data-en="See the game" data-fr="Voir le jeu">See the game</a>
-    <a href="engine.html" class="cta ghost" data-en="See the engine" data-fr="Voir le moteur">See the engine</a>
-  </div>
-</section>
-
-<!-- THREE PATHS -->
-<div class="paths">
-  <a href="game.html" class="path">
-    <div class="pkicker" data-en="// PATH 01" data-fr="// VOIE 01">// PATH 01</div>
-    <div class="ptitle" data-en="The <em>game</em>" data-fr="Le <em>jeu</em>">The <em>game</em></div>
-    <div class="pdesc" data-en="A 2D space survival story. A magenta rescue shuttle. A robot that's been with you since before the crash. No weapons. Sixteen chapters." data-fr="Une histoire de survie spatiale 2D. Une navette de secours magenta. Un robot qui est avec toi depuis avant le crash. Aucune arme. Seize chapitres.">A 2D space survival story. A magenta rescue shuttle. A robot that's been with you since before the crash. No weapons. Sixteen chapters.</div>
-    <div class="parrow" data-en="Read the story →" data-fr="Lire l'histoire →">Read the story →</div>
-  </a>
-  <a href="engine.html" class="path">
-    <div class="pkicker" data-en="// PATH 02" data-fr="// VOIE 02">// PATH 02</div>
-    <div class="ptitle" data-en="The <span class='cyan'>engine</span>" data-fr="Le <span class='cyan'>moteur</span>">The <span class="cyan">engine</span></div>
-    <div class="pdesc" data-en="Pure ES6 classes. No build, no bundler, no server. The engine ships with the game. Open it, read it, make your own game with it." data-fr="Vraies classes ES6. Pas de build, pas de bundler, pas de serveur. Le moteur est livré avec le jeu. Ouvre-le, lis-le, fais ton propre jeu avec.">Pure ES6 classes. No build, no bundler, no server. The engine ships with the game. Open it, read it, make your own game with it.</div>
-    <div class="parrow" data-en="See the engine →" data-fr="Voir le moteur →">See the engine →</div>
-  </a>
-  <a href="tech.html" class="path">
-    <div class="pkicker" data-en="// PATH 03" data-fr="// VOIE 03">// PATH 03</div>
-    <div class="ptitle" data-en="The <span class='yellow'>how</span>" data-fr="Le <span class='yellow'>comment</span>">The <span class="yellow">how</span></div>
-    <div class="pdesc" data-en="The technical philosophy. Why file://. Why vanilla. Why MIDI. Why hand-carved wood. The decisions, in one place, with code snippets." data-fr="La philosophie technique. Pourquoi file://. Pourquoi vanilla. Pourquoi MIDI. Pourquoi du bois sculpté à la main. Les décisions, dans un seul endroit, avec snippets de code.">The technical philosophy. Why file://. Why vanilla. Why MIDI. Why hand-carved wood. The decisions, in one place, with code snippets.</div>
-    <div class="parrow" data-en="Read the manifesto →" data-fr="Lire le manifeste →">Read the manifesto →</div>
-  </a>
+<!-- Menu mobile plein écran (ouvert par le hamburger) -->
+<div id="mobile-menu" class="mobile-menu">
+  <a href="#" data-view="overview" data-en="Overview"   data-fr="Accueil">Overview</a>
+  <a href="#" data-view="game"     data-en="The Game"   data-fr="Le Jeu">The Game</a>
+  <a href="#" data-view="engine"   data-en="The Engine" data-fr="Le Moteur">The Engine</a>
+  <a href="#" data-view="tech"     data-en="Tech"       data-fr="Tech">Tech</a>
+  <a href="#" data-view="survivable" data-en="Survivable" data-fr="Survivable">Survivable</a>
+  <a href="#" data-view="manifesto" data-en="Manifesto" data-fr="Manifeste">Manifesto</a>
 </div>
 
-<!-- PULL QUOTE -->
-<div class="pullquote">
-  <span data-en="One folder. <span class='accent'>Three artefacts.</span> No internet required." data-fr="Un dossier. <span class='accent'>Trois artefacts.</span> Pas d'internet requis.">One folder. <span class="accent">Three artefacts.</span> No internet required.</span>
-  <span class="sub" data-en="A game. An engine. A wooden box you can hold." data-fr="Un jeu. Un moteur. Une boîte en bois qu'on peut tenir.">A game. An engine. A wooden box you can hold.</span>
+<!-- VIEW OVERVIEW -->
+<div id="view-overview" class="view active">
+  <section class="hero">
+    <span class="pill" data-en="Space survival · Engine · Wood · Kickstarter 2026" data-fr="Survie spatiale · Moteur · Bois · Kickstarter 2026">Space survival · Engine · Wood · Kickstarter 2026</span>
+    <h1 data-en="A <em>game.</em> An <span class='cyan'>engine.</span> A <span class='yellow'>hand-carved&nbsp;box.</span>" data-fr="Un <em>jeu.</em> Un <span class='cyan'>moteur.</span> Une <span class='yellow'>boîte sculptée main.</span>">A <em>game.</em> An <span class="cyan">engine.</span> A <span class="yellow">hand-carved box.</span></h1>
+    <p class="tag" data-en="Three artefacts in one folder. Made by hand, without a build step, without a server, without a cloud. The whole thing runs from a USB stick." data-fr="Trois artefacts dans un même dossier. Faits à la main, sans build, sans serveur, sans cloud. Tout ça tourne depuis une clé USB.">Three artefacts in one folder. Made by hand, without a build step, without a server, without a cloud. The whole thing runs from a USB stick.</p>
+    <div>
+      <a href="game.html" class="cta" data-en="See the game" data-fr="Voir le jeu">See the game</a>
+      <a href="engine.html" class="cta ghost" data-en="See the engine" data-fr="Voir le moteur">See the engine</a>
+    </div>
+  </section>
+  <div class="paths">
+    <a href="game.html" class="path">
+      <div class="pkicker" data-en="// PATH 01" data-fr="// VOIE 01">// PATH 01</div>
+      <div class="ptitle" data-en="The <em>game</em>" data-fr="Le <em>jeu</em>">The <em>game</em></div>
+      <div class="pdesc" data-en="A 2D space survival story. A magenta rescue shuttle. A robot with you since before the crash. No weapons. Sixteen chapters." data-fr="Une histoire de survie spatiale 2D. Une navette magenta. Un robot avec toi depuis avant le crash. Aucune arme. Seize chapitres.">A 2D space survival story. A magenta rescue shuttle. A robot with you since before the crash. No weapons. Sixteen chapters.</div>
+      <div class="parrow" data-en="Read the story &rarr;" data-fr="Lire l'histoire &rarr;">Read the story &rarr;</div>
+    </a>
+    <a href="engine.html" class="path">
+      <div class="pkicker" data-en="// PATH 02" data-fr="// VOIE 02">// PATH 02</div>
+      <div class="ptitle" data-en="The <span class='cyan'>engine</span>" data-fr="Le <span class='cyan'>moteur</span>">The <span class="cyan">engine</span></div>
+      <div class="pdesc" data-en="Pure ES6 classes. No build, no bundler, no server. The engine ships with the game. Open it, read it, make your own game." data-fr="Vraies classes ES6. Pas de build, pas de bundler, pas de serveur. Le moteur est livré avec le jeu.">Pure ES6 classes. No build, no bundler, no server. The engine ships with the game. Open it, read it, make your own game.</div>
+      <div class="parrow" data-en="See the engine &rarr;" data-fr="Voir le moteur &rarr;">See the engine &rarr;</div>
+    </a>
+    <a href="tech.html" class="path">
+      <div class="pkicker" data-en="// PATH 03" data-fr="// VOIE 03">// PATH 03</div>
+      <div class="ptitle" data-en="The <span class='yellow'>how</span>" data-fr="Le <span class='yellow'>comment</span>">The <span class="yellow">how</span></div>
+      <div class="pdesc" data-en="The technical philosophy. Why file://. Why vanilla. Why MIDI. Why hand-carved wood. The decisions, in one place." data-fr="La philosophie technique. Pourquoi file://. Pourquoi vanilla. Pourquoi MIDI. Pourquoi du bois sculpté.">The technical philosophy. Why file://. Why vanilla. Why MIDI. Why hand-carved wood. The decisions, in one place.</div>
+      <div class="parrow" data-en="Read the manifesto &rarr;" data-fr="Lire le manifeste &rarr;">Read the manifesto &rarr;</div>
+    </a>
+  </div>
+  <div class="pullquote">
+    <span data-en="One folder. <span class='accent'>Three artefacts.</span> No internet required." data-fr="Un dossier. <span class='accent'>Trois artefacts.</span> Pas d'internet requis.">One folder. <span class="accent">Three artefacts.</span> No internet required.</span>
+    <span class="sub" data-en="A game. An engine. A wooden box you can hold." data-fr="Un jeu. Un moteur. Une boîte en bois qu'on peut tenir.">A game. An engine. A wooden box you can hold.</span>
+  </div>
+  <section>
+    <span class="kicker" data-en="// AT A GLANCE" data-fr="// EN BREF">// AT A GLANCE</span>
+    <h2 data-en="One shuttle. One voice. <em>One galaxy</em> to escape." data-fr="Une navette. Une voix. <em>Une galaxie</em> à fuir.">One shuttle. One voice. <em>One galaxy</em> to escape.</h2>
+    <p class="lead" data-en="The mothership is gone. You were not supposed to be alone. The rescue shuttle Galaxtarus answers — no cannons, no comms, no map. One AI talks to you." data-fr="Le vaisseau-mère a été détruit. Tu n'étais pas censé être seul. La navette Galaxtarus répond — sans canons, sans radio, sans carte. Une IA te parle.">The mothership is gone. You were not supposed to be alone. The rescue shuttle Galaxtarus answers — no cannons, no comms, no map. One AI talks to you.</p>
+    <div style="margin-top:40px;">
+      <a href="game.html" class="cta" data-en="Continue to the game &rarr;" data-fr="Continuer vers le jeu &rarr;">Continue to the game &rarr;</a>
+    </div>
+  </section>
 </div>
 
-<!-- SHIP TEASER VISUAL -->
-<section>
-  <span class="kicker" data-en="// AT A GLANCE" data-fr="// EN BREF">// AT A GLANCE</span>
-  <h2 data-en="One shuttle. One voice. <em>One galaxy</em> to escape." data-fr="Une navette. Une voix. <em>Une galaxie</em> à fuir.">One shuttle. One voice. <em>One galaxy</em> to escape.</h2>
-  <p class="lead" data-en="The mothership is gone. You weren't supposed to be alone. The rescue shuttle Galaxtarus answers — no cannons, no comms, no map. One AI talks to you. Something else is awake out here." data-fr="Le vaisseau-mère a été détruit. Tu n'étais pas censé être seul. La navette de secours Galaxtarus répond — sans canons, sans radio, sans carte. Une seule IA te parle. Et quelque chose d'autre est éveillé dehors.">The mothership is gone. You weren't supposed to be alone. The rescue shuttle Galaxtarus answers — no cannons, no comms, no map. One AI talks to you. Something else is awake out here.</p>
-
-  <div class="imgph">
-    <div class="imgph-label" data-en="[ IMAGE — HERO SHOT ]" data-fr="[ IMAGE — VUE D'ENSEMBLE ]">[ IMAGE — HERO SHOT ]</div>
-    <div class="imgph-desc" data-en="Magenta shuttle drifting past a large nebula. Coordinates visible faintly. Stars. The whole vibe in one frame." data-fr="Navette magenta dérivant devant une grande nébuleuse. Coordonnées en filigrane. Étoiles. Toute l'ambiance en une image.">Magenta shuttle drifting past a large nebula. Coordinates visible faintly. Stars. The whole vibe in one frame.</div>
+<!-- VIEW GAME -->
+<div id="view-game" class="view">
+  <section class="hero">
+    <span class="pill" data-en="// THE GAME" data-fr="// LE JEU">// THE GAME</span>
+    <h1 data-en="You were not supposed to&nbsp;<em>be alone.</em>" data-fr="Tu n'étais pas censé être&nbsp;<em>seul.</em>">You were not supposed to&nbsp;<em>be alone.</em></h1>
+    <p class="tag" data-en="A 2D space survival story. No weapons. No HUD. One AI talks to you. Sixteen chapters from the wreckage to the gateway of light." data-fr="Une histoire de survie spatiale 2D. Aucune arme. Aucun HUD. Une IA te parle. Seize chapitres, des débris jusqu'au portail de lumière.">A 2D space survival story. No weapons. No HUD. One AI talks to you. Sixteen chapters from the wreckage to the gateway of light.</p>
+    <div>
+      <a href="#pledge" class="cta" data-en="Back on Kickstarter" data-fr="Soutenir le Kickstarter">Back on Kickstarter</a>
+      <a href="#story" class="cta ghost" data-en="Read the story" data-fr="Lire l'histoire">Read the story</a>
+    </div>
+  </section>
+  <section id="story">
+    <span class="kicker" data-en="// COLD OPEN" data-fr="// SCÈNE D'OUVERTURE">// COLD OPEN</span>
+    <h2 data-en="The first image of the game is&nbsp;<em>debris.</em>" data-fr="La première image du jeu, c'est&nbsp;<em>des débris.</em>">The first image of the game is&nbsp;<em>debris.</em></h2>
+    <p class="lead" data-en="No briefing. No tutorial. No HUD. The rescue shuttle activated because something destroyed the ship you were on." data-fr="Pas de briefing. Pas de tutoriel. Pas de HUD. La navette s'est activée parce que quelque chose a détruit le vaisseau.">No briefing. No tutorial. No HUD. The rescue shuttle activated because something destroyed the ship you were on.</p>
+    <p data-en="That's the story. Every module you'll later pick up was dropped here, by people who came before you. They didn't make it out either." data-fr="C'est ça, l'histoire. Chaque module que tu ramasseras a été laissé ici par ceux qui sont venus avant. Eux non plus ne sont pas sortis.">That's the story. Every module you'll later pick up was dropped here, by people who came before you. They didn't make it out either.</p>
+  </section>
+  <section>
+    <div class="split reverse">
+      <div class="text">
+        <span class="kicker" data-en="// THE SHUTTLE" data-fr="// LA NAVETTE">// THE SHUTTLE</span>
+        <h2 data-en="A <span class='pink'>magenta triangle</span> in a galaxy of blue." data-fr="Un <span class='pink'>triangle magenta</span> dans une galaxie bleue.">A <span class="pink">magenta triangle</span> in a galaxy of blue.</h2>
+        <p class="lead" data-en="The shuttle is called Galaxtarus. No cannons. No turrets. No weapons of any kind." data-fr="La navette s'appelle Galaxtarus. Aucun canon. Aucune tourelle. Aucune arme.">The shuttle is called Galaxtarus. No cannons. No turrets. No weapons of any kind.</p>
+        <p data-en="Her color is deliberate. In this cold blue universe, she stands out. She's visible. She's fragile. She's alone." data-fr="Sa couleur n'est pas un accident. Dans cet univers bleu et froid, elle tranche. Elle est visible. Elle est fragile. Elle est seule.">Her color is deliberate. In this cold blue universe, she stands out. She's visible. She's fragile. She's alone.</p>
+        <p data-en="You are the pilot. You have no name. Her inertia is real. Her engine over-heats if you push it." data-fr="Tu es le pilote. Tu n'as pas de nom. Son inertie est réelle. Son moteur surchauffe si tu pousses.">You are the pilot. You have no name. Her inertia is real. Her engine over-heats if you push it.</p>
+      </div>
+      <div class="visual">
+        <svg width="100%" viewBox="0 0 500 500" style="display:block;">
+          <defs><radialGradient id="g-ship"><stop offset="0%" stop-color="#ff4dd6" stop-opacity="0.35"/><stop offset="100%" stop-color="#ff4dd6" stop-opacity="0"/></radialGradient></defs>
+          <rect width="500" height="500" fill="#070b18"/>
+          <circle cx="250" cy="250" r="220" fill="url(#g-ship)"/>
+          <circle class="star" cx="60" cy="80" r="1"/><circle class="star" cx="180" cy="50" r="1.4" style="animation-delay:.5s"/><circle class="star" cx="430" cy="420" r="1.3" style="animation-delay:.3s"/>
+          <ellipse cx="165" cy="250" rx="80" ry="6" fill="#ff4dd6" opacity="0.3"/>
+          <ellipse cx="190" cy="250" rx="50" ry="3" fill="#fff" opacity="0.55"/>
+          <g transform="translate(250,250) scale(2.4)" class="ship-drift">
+            <polygon points="0,-15 60,-8 80,0 60,8 0,15" fill="#ff4dd6" stroke="#fff" stroke-width="0.6"/>
+            <polygon points="35,-8 60,-3 70,0 60,3 35,8" fill="#1a0518"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+  <div class="pullquote">
+    <span data-en="In this entire galaxy, exactly&nbsp;<span class='accent'>one voice speaks.</span>" data-fr="Dans cette galaxie entière, une&nbsp;<span class='accent'>seule voix parle.</span>">In this entire galaxy, exactly <span class="accent">one voice speaks.</span></span>
+    <span class="sub" data-en="His name is L.O.S." data-fr="Il s'appelle L.O.S.">His name is L.O.S.</span>
   </div>
+  <section>
+    <div class="split">
+      <div class="visual">
+        <svg width="100%" viewBox="0 0 500 500" style="display:block;">
+          <defs><radialGradient id="g-los"><stop offset="0%" stop-color="#4dffee" stop-opacity="0.18"/><stop offset="100%" stop-color="#4dffee" stop-opacity="0"/></radialGradient></defs>
+          <rect width="500" height="500" fill="#060911"/>
+          <circle cx="250" cy="260" r="200" fill="url(#g-los)"/>
+          <circle class="star" cx="80" cy="80" r="1"/><circle class="star" cx="420" cy="100" r="1.2" style="animation-delay:.5s"/>
+          <clipPath id="los-scr"><rect x="-78" y="-80" width="156" height="120" rx="6"/></clipPath>
+          <filter id="los-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <g transform="translate(250,260)">
+            <animateTransform attributeName="transform" type="translate" values="250 260;250 252;250 260" keyTimes="0;0.5;1" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+            <rect x="-100" y="-110" width="200" height="220" rx="14" fill="#16223f" stroke="#4dffee" stroke-width="2.5"/>
+            <line x1="-50" y1="-110" x2="-50" y2="-140" stroke="#4dffee" stroke-width="2"/>
+            <circle cx="-50" cy="-145" r="4" fill="#ff4dd6" filter="url(#los-glow)"><animate attributeName="r" values="3;5.5;3" dur="2.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.5;1;0.5" dur="2.4s" repeatCount="indefinite"/></circle>
+            <line x1="50" y1="-110" x2="50" y2="-140" stroke="#4dffee" stroke-width="2"/>
+            <circle cx="50" cy="-145" r="4" fill="#4dffee" filter="url(#los-glow)"><animate attributeName="r" values="3;5.5;3" dur="2.4s" begin="-1.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.5;1;0.5" dur="2.4s" begin="-1.2s" repeatCount="indefinite"/></circle>
+            <rect x="-78" y="-80" width="156" height="120" rx="6" fill="#040b18" stroke="#46d6c8" stroke-width="1.5"/>
+          </g>
+          <g transform="translate(250,260)"><g clip-path="url(#los-scr)">
+            <rect x="-78" y="-80" width="156" height="120" fill="url(#g-los)" opacity="0.6"/>
+            <rect x="-58" y="-56" width="34" height="13" rx="3" fill="#4dffee" filter="url(#los-glow)"><animate attributeName="height" values="13;13;2;13;13" keyTimes="0;0.92;0.95;0.98;1" dur="5.5s" repeatCount="indefinite"/><animate attributeName="y" values="-56;-56;-50.5;-56;-56" keyTimes="0;0.92;0.95;0.98;1" dur="5.5s" repeatCount="indefinite"/></rect>
+            <rect x="24" y="-56" width="34" height="13" rx="3" fill="#4dffee" filter="url(#los-glow)"><animate attributeName="height" values="13;13;2;13;13" keyTimes="0;0.92;0.95;0.98;1" dur="5.5s" begin="-0.04s" repeatCount="indefinite"/><animate attributeName="y" values="-56;-56;-50.5;-56;-56" keyTimes="0;0.92;0.95;0.98;1" dur="5.5s" begin="-0.04s" repeatCount="indefinite"/></rect>
+            <g fill="#4dffee" filter="url(#los-glow)">
+              <rect x="-52" y="-2" width="7" height="34" rx="2"><animate attributeName="height" values="8;34;14;30;8" dur="1.05s" begin="0s" repeatCount="indefinite"/><animate attributeName="y" values="24;-2;18;2;24" dur="1.05s" begin="0s" repeatCount="indefinite"/></rect>
+              <rect x="-41" y="-2" width="7" height="34" rx="2"><animate attributeName="height" values="8;34;14;30;8" dur="1.05s" begin="-0.12s" repeatCount="indefinite"/><animate attributeName="y" values="24;-2;18;2;24" dur="1.05s" begin="-0.12s" repeatCount="indefinite"/></rect>
+              <rect x="-30" y="-2" width="7" height="34" rx="2"><animate attributeName="height" values="8;34;14;30;8" dur="1.05s" begin="-0.28s" repeatCount="indefinite"/><animate attributeName="y" values="24;-2;18;2;24" dur="1.05s" begin="-0.28s" repeatCount="indefinite"/></rect>
+              <rect x="-19" y="-2" width="7" height="34" rx="2"><animate attributeName="height" values="8;34;14;30;8" dur="1.05s" begin="-0.42s" repeatCount="indefinite"/><animate attributeName="y" values="24;-2;18;2;24" dur="1.05s" begin="-0.42s" repeatCount="indefinite"/></rect>
+              <rect x="-8" y="-2" width="7" height="34" rx="2"><animate attributeName="height" values="8;34;14;30;8" dur="1.05s" begin="-0.56s" repeatCount="indefinite"/><animate attributeName="y" values="24;-2;18;2;24" dur="1.05s" begin="-0.56s" repeatCount="indefinite"/></rect>
+              <rect x="3" y="-2" width="7" height="34" rx="2"><animate attributeName="height" values="8;34;14;30;8" dur="1.05s" begin="-0.70s" repeatCount="indefinite"/><animate attributeName="y" values="24;-2;18;2;24" dur="1.05s" begin="-0.70s" repeatCount="indefinite"/></rect>
+              <rect x="14" y="-2" width="7" height="34" rx="2"><animate attributeName="height" values="8;34;14;30;8" dur="1.05s" begin="-0.18s" repeatCount="indefinite"/><animate attributeName="y" values="24;-2;18;2;24" dur="1.05s" begin="-0.18s" repeatCount="indefinite"/></rect>
+              <rect x="25" y="-2" width="7" height="34" rx="2"><animate attributeName="height" values="8;34;14;30;8" dur="1.05s" begin="-0.34s" repeatCount="indefinite"/><animate attributeName="y" values="24;-2;18;2;24" dur="1.05s" begin="-0.34s" repeatCount="indefinite"/></rect>
+              <rect x="36" y="-2" width="7" height="34" rx="2"><animate attributeName="height" values="8;34;14;30;8" dur="1.05s" begin="-0.48s" repeatCount="indefinite"/><animate attributeName="y" values="24;-2;18;2;24" dur="1.05s" begin="-0.48s" repeatCount="indefinite"/></rect>
+              <rect x="47" y="-2" width="7" height="34" rx="2"><animate attributeName="height" values="8;34;14;30;8" dur="1.05s" begin="-0.62s" repeatCount="indefinite"/><animate attributeName="y" values="24;-2;18;2;24" dur="1.05s" begin="-0.62s" repeatCount="indefinite"/></rect>
+            </g>
+            <rect x="-78" y="-80" width="156" height="6" fill="#4dffee" opacity="0.18"><animate attributeName="y" values="-80;40" dur="4.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.35;0.35;0" keyTimes="0;0.1;0.9;1" dur="4.5s" repeatCount="indefinite"/></rect>
+            <rect x="-78" y="-34" width="156" height="9" fill="#7dfff2" opacity="0"><animate attributeName="opacity" values="0;0;0.5;0.2;0.4;0" keyTimes="0;0.93;0.94;0.96;0.98;1" dur="7.5s" repeatCount="indefinite"/><animate attributeName="x" values="-78;-78;-86;-70;-82;-78" keyTimes="0;0.93;0.94;0.96;0.98;1" dur="7.5s" repeatCount="indefinite"/></rect>
+          </g></g>
+          <g transform="translate(250,260)">
+            <rect x="-120" y="120" width="240" height="40" rx="4" fill="#0d1426" stroke="#4dffee" stroke-width="1"/>
+            <text x="-6" y="146" text-anchor="middle" font-family="Consolas,monospace" font-size="12" fill="#4dffee" letter-spacing="3">L.O.S</text>
+            <text x="40" y="146" font-family="Consolas,monospace" font-size="13" fill="#4dffee">_<animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.5;1" dur="1.1s" repeatCount="indefinite"/></text>
+          </g>
+        </svg>
+      </div>
+      <div class="text">
+        <span class="kicker" data-en="// THE AI" data-fr="// L'IA">// THE AI</span>
+        <h2 data-en="He took care of <em>the garden.</em> He still takes care of someone." data-fr="Il s'occupait du <em>jardin.</em> Il s'occupe toujours de quelqu'un.">He took care of <em>the garden.</em> He still takes care of someone.</h2>
+        <p class="lead" data-en="L.O.S. was the gardener of the mothership's botanical bay. The garden is gone. He's the only voice left in the universe." data-fr="L.O.S. était le jardinier de la serre botanique. Le jardin est parti. Il est la seule voix qu'il reste dans l'univers.">L.O.S. was the gardener of the mothership's botanical bay. The garden is gone. He's the only voice left in the universe.</p>
+        <p data-en="He's damaged. He glitches mid-sentence. He cracks a joke right when you needed one. He addresses you like an old friend — and the game never explains why. You'll feel it before you can name it." data-fr="Il est endommagé. Il glitche en pleine phrase. Il sort une blague pile quand tu en avais besoin. Il te tutoie comme un vieil ami — et le jeu n'explique jamais pourquoi.">He's damaged. He glitches mid-sentence. He cracks a joke right when you needed one. He addresses you like an old friend — and the game never explains why. You'll feel it before you can name it.</p>
+        <p data-en="<strong style='color:#fff'>His every line was written by an actual AI.</strong> Honest, on the box, on the page." data-fr="<strong style='color:#fff'>Chaque ligne de L.O.S. a été écrite par une vraie IA.</strong> C'est honnête, c'est sur la boîte."><strong style="color:#fff">His every line was written by an actual AI.</strong> Honest, on the box, on the page.</p>
+        <p class="sig" data-en="&mdash; tagline : &ldquo;Lonely. Together.&rdquo;" data-fr="&mdash; tagline : &laquo; La solitude avec une IA. &raquo;">&mdash; tagline : &ldquo;Lonely. Together.&rdquo;</p>
+      </div>
+    </div>
+  </section>
+  <div class="divider"><hr/></div>
+  <section>
+    <span class="kicker" data-en="// THE LOOP" data-fr="// LA BOUCLE">// THE LOOP</span>
+    <h2 data-en="You can't <span class='pink'>fight</span>. You can <em>outlast.</em>" data-fr="Tu ne peux pas <span class='pink'>combattre</span>. Tu peux <em>survivre.</em>">You can't <span class="pink">fight</span>. You can <em>outlast.</em></h2>
+    <p class="lead" data-en="There is no enemy you defeat in Galaxtarus. Only ones you survive long enough to leave behind." data-fr="Il n'y a aucun ennemi qu'on bat dans Galaxtarus. Seulement ceux qu'on survit assez longtemps pour les laisser derrière.">There is no enemy you defeat in Galaxtarus. Only ones you survive long enough to leave behind.</p>
+    <p data-en="You drift. You dodge. You scavenge modules from those who came before — and went under. Every shield, every burst, every save-point was theirs first." data-fr="Tu dérives. Tu esquives. Tu récupères des modules sur ceux qui sont passés avant — et qui ont sombré. Chaque bouclier, chaque rafale leur appartenait avant toi.">You drift. You dodge. You scavenge modules from those who came before — and went under. Every shield, every burst, every save-point was theirs first.</p>
+  </section>
+  <section>
+    <div class="split reverse">
+      <div class="text">
+        <span class="kicker" data-en="// HAVOC" data-fr="// HAVOC">// HAVOC</span>
+        <h2 data-en="Six legs. A diamond <span class='yellow'>eye.</span> No mercy. No malice." data-fr="Six pattes. Un œil en <span class='yellow'>losange.</span> Aucune pitié. Aucune malveillance.">Six legs. A diamond <span class="yellow">eye.</span> No mercy. No malice.</h2>
+        <p class="lead" data-en="The thing that guards the way out is yellow crystal. You don't fight it — you're a rescue shuttle. You run." data-fr="La chose qui garde la sortie est en cristal jaune. Tu ne combats pas — tu es une navette de secours. Tu fuis.">The thing that guards the way out is yellow crystal. You don't fight it — you're a rescue shuttle. You run.</p>
+        <p data-en="HAVOC is not evil. It's territorial. The eye charges. The eye fires. The eye recharges. You learn its rhythm, or you don't get to see the other side." data-fr="HAVOC n'est pas méchant. Il est territorial. L'œil charge. L'œil tire. L'œil recharge. Tu apprends son rythme, ou tu ne verras jamais l'autre côté.">HAVOC is not evil. It's territorial. The eye charges. The eye fires. The eye recharges. You learn its rhythm, or you don't get to see the other side.</p>
+      </div>
+      <div class="visual">
+        <svg width="100%" viewBox="0 0 500 500" style="display:block;">
+          <defs><radialGradient id="g-havoc"><stop offset="0%" stop-color="#ffcc44" stop-opacity="0.22"/><stop offset="100%" stop-color="#ffcc44" stop-opacity="0"/></radialGradient></defs>
+          <rect width="500" height="500" fill="#0a0a14"/>
+          <circle cx="250" cy="250" r="200" fill="url(#g-havoc)"/>
+          <circle class="star" cx="50" cy="60" r="1"/><circle class="star" cx="430" cy="80" r="1.2" style="animation-delay:.4s"/>
+          <g transform="translate(250,250)">
+            <g stroke="#ffcc44" stroke-width="3" fill="none">
+              <line x1="0" y1="0" x2="-80" y2="-40"/><line x1="-80" y1="-40" x2="-140" y2="-80"/>
+              <line x1="0" y1="0" x2="-90" y2="0"/><line x1="-90" y1="0" x2="-160" y2="-20"/>
+              <line x1="0" y1="0" x2="-80" y2="40"/><line x1="-80" y1="40" x2="-140" y2="80"/>
+              <line x1="0" y1="0" x2="80" y2="-40"/><line x1="80" y1="-40" x2="140" y2="-80"/>
+              <line x1="0" y1="0" x2="90" y2="0"/><line x1="90" y1="0" x2="160" y2="-20"/>
+              <line x1="0" y1="0" x2="80" y2="40"/><line x1="80" y1="40" x2="140" y2="80"/>
+            </g>
+            <g fill="#ffcc44"><circle cx="-80" cy="-40" r="3"/><circle cx="-90" cy="0" r="3"/><circle cx="-80" cy="40" r="3"/><circle cx="80" cy="-40" r="3"/><circle cx="90" cy="0" r="3"/><circle cx="80" cy="40" r="3"/></g>
+            <polygon points="-30,-50 0,-65 30,-50 40,-20 30,15 0,25 -30,15 -40,-20" fill="#ffcc44" stroke="#fff" stroke-width="1" opacity="0.95"/>
+            <g class="havoc-eye"><polygon points="0,-15 16,-2 0,12 -16,-2" fill="#fff" stroke="#ffcc44" stroke-width="1.5"/><polygon points="0,-9 9,-2 0,6 -9,-2" fill="#ffcc44"/></g>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+  <section>
+    <span class="kicker" data-en="// THE JOURNEY &middot; 16 CHAPTERS" data-fr="// LA TRAVERSÉE &middot; 16 CHAPITRES">// THE JOURNEY &middot; 16 CHAPTERS</span>
+    <h2 data-en="A <em>shipwreck story.</em> In sixteen chapters." data-fr="Une <em>histoire de naufrage.</em> En seize chapitres.">A <em>shipwreck story.</em> In sixteen chapters.</h2>
+    <div class="chapters-grid">
+      <div class="chapter locked"><div class="num">01</div><div class="ttl" data-en="The comfort" data-fr="Le confort">The comfort</div></div>
+      <div class="chapter locked"><div class="num">02</div><div class="ttl" data-en="The disaster" data-fr="Le désastre">The disaster</div></div>
+      <div class="chapter played"><div class="num" data-en="03 &middot; DEMO" data-fr="03 &middot; DÉMO">03 &middot; DEMO</div><div class="ttl" data-en="The Awakening" data-fr="L'Éveil">The Awakening</div></div>
+      <div class="chapter locked"><div class="num">04</div><div class="ttl" data-en="Inventory" data-fr="L'inventaire">Inventory</div></div>
+      <div class="chapter locked"><div class="num">05</div><div class="ttl" data-en="Adaptation" data-fr="Adaptation">Adaptation</div></div>
+      <div class="chapter locked"><div class="num">06</div><div class="ttl" data-en="The first trace" data-fr="La première trace">The first trace</div></div>
+      <div class="chapter played"><div class="num" data-en="07 &middot; DEMO" data-fr="07 &middot; DÉMO">07 &middot; DEMO</div><div class="ttl" data-en="The Caterpillar" data-fr="La Chenille">The Caterpillar</div></div>
+      <div class="chapter locked"><div class="num">08</div><div class="ttl" data-en="The routine" data-fr="La routine">The routine</div></div>
+      <div class="chapter played"><div class="num" data-en="09 &middot; DEMO" data-fr="09 &middot; DÉMO">09 &middot; DEMO</div><div class="ttl" data-en="The Puzzle" data-fr="Le Casse-tête">The Puzzle</div></div>
+      <div class="chapter locked"><div class="num">10</div><div class="ttl" data-en="The separation" data-fr="La séparation">The separation</div></div>
+      <div class="chapter locked"><div class="num">11</div><div class="ttl" data-en="Total isolation" data-fr="L'isolement total">Total isolation</div></div>
+      <div class="chapter locked"><div class="num">12</div><div class="ttl" data-en="The search for L.O.S." data-fr="La quête de L.O.S.">The search for L.O.S.</div></div>
+      <div class="chapter played"><div class="num" data-en="13 &middot; DEMO" data-fr="13 &middot; DÉMO">13 &middot; DEMO</div><div class="ttl" data-en="All Seems Lost" data-fr="All Seems Lost">All Seems Lost</div></div>
+      <div class="chapter locked"><div class="num">14</div><div class="ttl" data-en="The crossing" data-fr="La traversée">The crossing</div></div>
+      <div class="chapter locked"><div class="num">15</div><div class="ttl">HAVOC</div></div>
+      <div class="chapter locked"><div class="num">16</div><div class="ttl" data-en="The threshold" data-fr="Le seuil">The threshold</div></div>
+    </div>
+    <p class="sig" data-en="&mdash; in the lineage of The Odyssey, Robinson Crusoe, Gravity, The Martian, Moon, Solaris." data-fr="&mdash; dans la lignée de L'Odyssée, Robinson Crusoe, Gravity, Seul sur Mars, Moon, Solaris.">&mdash; in the lineage of The Odyssey, Robinson Crusoe, Gravity, The Martian, Moon, Solaris.</p>
+  </section>
+  <div class="divider"><hr/></div>
+  <section id="pledge">
+    <span class="kicker" data-en="// KICKSTARTER 2026" data-fr="// KICKSTARTER 2026">// KICKSTARTER 2026</span>
+    <h2 data-en="A <span class='pink'>USB stick</span>, a game, an engine, and a hand-carved chest." data-fr="Une <span class='pink'>clé USB</span>, un jeu, un moteur, et un coffret sculpté main.">A <span class="pink">USB stick</span>, a game, an engine, and a hand-carved chest.</h2>
+    <div class="pledge-strip">
+      <div class="tier"><div class="price">$10</div><div class="name" data-en="Digital" data-fr="Numérique">Digital</div><div class="desc" data-en="The full game, download, name in the credits." data-fr="Le jeu complet, téléchargement, ton nom dans les crédits.">The full game, download, name in the credits.</div></div>
+      <div class="tier"><div class="price">$35</div><div class="name">USB Standard</div><div class="desc" data-en="A real USB stick. Boot screen, retro vibes." data-fr="Une vraie clé USB. Écran de boot, vibes rétro.">A real USB stick. Boot screen, retro vibes.</div></div>
+      <div class="tier"><div class="price">$65</div><div class="name">USB Deluxe</div><div class="desc" data-en="The game, the engine source, every editor, and the dev notes." data-fr="Le jeu, le code source du moteur, tous les éditeurs, et les notes de dev.">The game, the engine source, every editor, and the dev notes.</div></div>
+      <div class="tier signature"><div class="price">$200</div><div class="name" data-en="Hand-carved chest &middot; 30 max" data-fr="Coffret sculpté &middot; 30 max">Hand-carved chest &middot; 30 max</div><div class="desc" data-en="A wooden chest sculpted by hand. USB inside. Signed and numbered." data-fr="Un coffret en bois sculpté à la main. Clé USB incluse. Signé et numéroté.">A wooden chest sculpted by hand. USB inside. Signed and numbered.</div></div>
+    </div>
+    <div style="margin-top:40px; text-align:center;">
+      <a href="#" class="cta" data-notify data-en="Get notified when it opens" data-fr="Prévenez-moi du lancement">Get notified when it opens</a>
+    </div>
+  </section>
+</div>
 
-  <div style="margin-top:40px;">
-    <a href="game.html" class="cta" data-en="Continue to the game →" data-fr="Continuer vers le jeu →">Continue to the game →</a>
+<!-- VIEW ENGINE -->
+<div id="view-engine" class="view">
+  <section class="hero">
+    <span class="pill" data-en="// THE ENGINE" data-fr="// LE MOTEUR">// THE ENGINE</span>
+    <h1 data-en="We built our own&nbsp;<em>engine.</em> It ships with the&nbsp;game." data-fr="On a construit notre propre&nbsp;<em>moteur.</em> Il est livré avec le&nbsp;jeu.">We built our own&nbsp;<em>engine.</em> It ships with the&nbsp;game.</h1>
+    <p class="tag" data-en="Pure ES6 classes. No build step. No bundler. No npm. No server. A folder of files, double-click the HTML, the game runs." data-fr="Vraies classes ES6. Pas de build. Pas de bundler. Pas de npm. Pas de serveur. Un dossier de fichiers, double-clic, le jeu tourne.">Pure ES6 classes. No build step. No bundler. No npm. No server. A folder of files, double-click the HTML, the game runs.</p>
+    <div>
+      <a href="#deluxe" class="cta" data-en="USB Deluxe tier" data-fr="Palier USB Deluxe">USB Deluxe tier</a>
+      <a href="tech.html" class="cta ghost" data-en="See the tech" data-fr="Voir la tech">See the tech</a>
+    </div>
+  </section>
+  <div class="divider"><hr/></div>
+  <section>
+    <span class="kicker" data-en="// NOT JUST A TOY ENGINE" data-fr="// PAS QU'UN MOTEUR DE PETITS JEUX">// NOT JUST A TOY ENGINE</span>
+    <h2 data-en="It's not just an engine for <em>small games.</em>" data-fr="Ce n'est pas qu'un moteur de <em>petits jeux.</em>">It's not just an engine for <em>small games.</em></h2>
+    <p class="lead" data-en="Galaxtarus is an interactive engine written entirely in native JavaScript, with zero dependencies, that opens in a plain browser &mdash; from a file, from a USB stick, with no server and no connection. That is precisely what makes it useful far beyond games." data-fr="Galaxtarus est un moteur interactif &eacute;crit enti&egrave;rement en JavaScript natif, sans aucune d&eacute;pendance, qui s'ouvre dans un simple navigateur &mdash; depuis un fichier, depuis une cl&eacute; USB, sans serveur et sans connexion. C'est pr&eacute;cis&eacute;ment ce qui le rend utile bien au-del&agrave; du jeu.">Galaxtarus is an interactive engine written entirely in native JavaScript, with zero dependencies, that opens in a plain browser &mdash; from a file, from a USB stick, with no server and no connection. That is precisely what makes it useful far beyond games.</p>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-num">0</div><div class="stat-lab" data-en="external dependency &mdash; no <code>fetch</code>, no CDN, empty <code>libs/</code> folder" data-fr="d&eacute;pendance externe &mdash; aucun <code>fetch</code>, aucun CDN, dossier <code>libs/</code> vide">external dependency &mdash; no <code>fetch</code>, no CDN, empty <code>libs/</code> folder</div></div>
+      <div class="stat-card"><div class="stat-num small">file://</div><div class="stat-lab" data-en="runs offline, no server, copyable onto a USB stick" data-fr="fonctionne hors-ligne, sans serveur, copiable sur cl&eacute; USB">runs offline, no server, copyable onto a USB stick</div></div>
+      <div class="stat-card"><div class="stat-num">8</div><div class="stat-lab" data-en="built-in visual editors (drawing, zones, universe, planets, dialogues, sounds&hellip;)" data-fr="&eacute;diteurs visuels int&eacute;gr&eacute;s (dessin, zones, univers, plan&egrave;tes, dialogues, sons&hellip;)">built-in visual editors (drawing, zones, universe, planets, dialogues, sounds&hellip;)</div></div>
+      <div class="stat-card"><div class="stat-num small">i18n</div><div class="stat-lab" data-en="multilingual offline, extensible with a single language file" data-fr="multilingue offline, extensible par simple fichier de langue">multilingual offline, extensible with a single language file</div></div>
+    </div>
+  </section>
+  <div class="divider"><hr/></div>
+  <section>
+    <span class="kicker" data-en="// 30 REAL-WORLD USES" data-fr="// 30 UTILISATIONS R&Eacute;ELLES">// 30 REAL-WORLD USES</span>
+    <h2 data-en="One engine, <em>thirty</em> real-world uses." data-fr="Un moteur, <em>trente</em> utilisations r&eacute;elles.">One engine, <em>thirty</em> real-world uses.</h2>
+    <p class="lead" data-en="The same engine, grouped into six families. Change the content, not the code." data-fr="Le m&ecirc;me moteur, regroup&eacute; en six familles. On change le contenu, pas le code.">The same engine, grouped into six families. Change the content, not the code.</p>
+    <div class="orbit-chart" id="engine-orbit"></div>
+    <div class="usecase-grid">
+      <article class="usecase-card" data-fam="edu">
+        <span class="uc-tag" data-en="Education &amp; science" data-fr="&Eacute;ducation &amp; sciences">Education &amp; science</span>
+        <h3 data-en="Offline teaching kit" data-fr="Trousse p&eacute;dagogique hors-ligne">Offline teaching kit</h3>
+        <p data-en="Interactive, multilingual courses for schools with no internet, via the i18n system." data-fr="Cours interactifs multilingues pour &eacute;coles sans internet, via le syst&egrave;me i18n.">Interactive, multilingual courses for schools with no internet, via the i18n system.</p>
+      </article>
+      <article class="usecase-card" data-fam="form">
+        <span class="uc-tag" data-en="Training &amp; procedures" data-fr="Formation &amp; proc&eacute;dures">Training &amp; procedures</span>
+        <h3 data-en="First-aid guide" data-fr="Guide de premiers secours">First-aid guide</h3>
+        <p data-en="Medical procedures played as step-by-step sequences with branching dialogues." data-fr="Proc&eacute;dures m&eacute;dicales jou&eacute;es en s&eacute;quences + dialogues &agrave; embranchements.">Medical procedures played as step-by-step sequences with branching dialogues.</p>
+      </article>
+      <article class="usecase-card" data-fam="crea">
+        <span class="uc-tag" data-en="Creation &amp; media" data-fr="Cr&eacute;ation &amp; m&eacute;dias">Creation &amp; media</span>
+        <h3 data-en="Vector animation studio" data-fr="Studio d'animation vectorielle">Vector animation studio</h3>
+        <p data-en="Build animations (keyframes, easing) with the DrawEditor." data-fr="Cr&eacute;er des animations (keyframes, easing) avec le DrawEditor.">Build animations (keyframes, easing) with the DrawEditor.</p>
+      </article>
+      <article class="usecase-card" data-fam="tool">
+        <span class="uc-tag" data-en="Tools &amp; prototyping" data-fr="Outils &amp; prototypage">Tools &amp; prototyping</span>
+        <h3 data-en="Local dashboard / HMI" data-fr="Tableau de bord / IHM locale">Local dashboard / HMI</h3>
+        <p data-en="A lightweight human-machine interface for local hardware, with no network." data-fr="Interface homme-machine l&eacute;g&egrave;re pour mat&eacute;riel local, sans r&eacute;seau.">A lightweight human-machine interface for local hardware, with no network.</p>
+      </article>
+      <article class="usecase-card" data-fam="patr">
+        <span class="uc-tag" data-en="Heritage &amp; autonomy" data-fr="Patrimoine &amp; autonomie">Heritage &amp; autonomy</span>
+        <h3 data-en="Standalone info kiosk" data-fr="Kiosque d'information autonome">Standalone info kiosk</h3>
+        <p data-en="A museum or town-hall kiosk that runs with no server, in <code>file://</code>." data-fr="Borne de mus&eacute;e ou de mairie qui tourne sans serveur, en <code>file://</code>.">A museum or town-hall kiosk that runs with no server, in <code>file://</code>.</p>
+      </article>
+      <article class="usecase-card" data-fam="reci">
+        <span class="uc-tag" data-en="Story, culture &amp; care" data-fr="R&eacute;cit, culture &amp; soin">Story, culture &amp; care</span>
+        <h3 data-en="Cultural transmission" data-fr="Transmission culturelle">Cultural transmission</h3>
+        <p data-en="Animated, multilingual, narrated tales, to share without infrastructure." data-fr="Contes anim&eacute;s, multilingues et sonoris&eacute;s, &agrave; diffuser sans infrastructure.">Animated, multilingual, narrated tales, to share without infrastructure.</p>
+      </article>
+    </div>
+    <p class="factual" data-en="<strong>The factual point.</strong> Every use rests on properties verifiable in the code: zero external dependency, <code>file://</code> execution (offline, on USB), strict engine / content separation, declarative serialized data, built-in internationalization, and a suite of visual editors. None of these capabilities needs the internet &mdash; they keep running exactly the same way, connected or not." data-fr="<strong>Le point factuel.</strong> Toutes ces utilisations reposent sur des propri&eacute;t&eacute;s v&eacute;rifiables dans le code : z&eacute;ro d&eacute;pendance externe, ex&eacute;cution en <code>file://</code> (hors-ligne, sur USB), s&eacute;paration stricte moteur / contenu, donn&eacute;es d&eacute;claratives et s&eacute;rialis&eacute;es, internationalisation int&eacute;gr&eacute;e, et une suite d'&eacute;diteurs visuels. Aucune de ces capacit&eacute;s n'a besoin d'internet &mdash; elles continuent de tourner exactement de la m&ecirc;me fa&ccedil;on connect&eacute;es ou non."><strong>The factual point.</strong> Every use rests on properties verifiable in the code: zero external dependency, <code>file://</code> execution, strict engine / content separation, declarative serialized data, built-in internationalization, and a suite of visual editors. None of these needs the internet.</p>
+  </section>
+  <div class="divider"><hr/></div>
+  <section>
+    <span class="kicker" data-en="// WHY IT MATTERS IF COLLAPSE COMES" data-fr="// POURQUOI IL COMPTE SI UN EFFONDREMENT ARRIVE">// WHY IT MATTERS IF COLLAPSE COMES</span>
+    <h2 data-en="Where the network stops, <em>this engine keeps running.</em>" data-fr="L&agrave; o&ugrave; le r&eacute;seau s'arr&ecirc;te, <em>ce moteur continue de fonctionner.</em>">Where the network stops, <em>this engine keeps running.</em></h2>
+    <p class="lead" data-en="Most of today's software dies the moment you cut the internet: it needs servers, accounts, app stores, build chains, updates. Galaxtarus needs none of that." data-fr="La plupart des logiciels d'aujourd'hui meurent d&egrave;s qu'on coupe internet : ils ont besoin de serveurs, de comptes, de boutiques d'applications, de cha&icirc;nes de compilation, de mises &agrave; jour. Galaxtarus, lui, n'a besoin de rien de tout &ccedil;a.">Most of today's software dies the moment you cut the internet: it needs servers, accounts, app stores, build chains, updates. Galaxtarus needs none of that.</p>
+    <p data-en="The source code is readable, the engine is separated from the content (the engine &laquo;&nbsp;knows nothing&nbsp;&raquo; about the game running on it), everything is serialized as declarative data, and the whole thing runs in any browser, even an old one, on modest hardware. That makes it a survivable medium for knowledge and interactive tools: you can freeze a skill, a training course, a map, a procedure or a story into it, then copy, duplicate and pass it on indefinitely, without depending on any infrastructure." data-fr="Le code source est lisible, le moteur est s&eacute;par&eacute; du contenu (le moteur &laquo;&nbsp;ne conna&icirc;t rien&nbsp;&raquo; au jeu qui tourne dessus), tout est s&eacute;rialis&eacute; en donn&eacute;es d&eacute;claratives, et l'ensemble s'ex&eacute;cute dans n'importe quel navigateur, m&ecirc;me ancien, sur du mat&eacute;riel modeste. Cela en fait un support de connaissance et d'outils interactifs survivable : on peut y figer un savoir-faire, une formation, une carte, une proc&eacute;dure ou un r&eacute;cit, puis le copier, le dupliquer et le transmettre ind&eacute;finiment, sans d&eacute;pendre d'aucune infrastructure.">The source code is readable, the engine is separated from the content, everything is serialized as declarative data, and the whole thing runs in any browser, even an old one, on modest hardware.</p>
+    <p data-en="Concretely, the engine already provides generic, reusable building blocks: an event bus, state machines, a simulation clock (pause / slow-motion / narrative time), declarative scripted sequences, a data-driven action registry, an infinite world in zones, a camera, a reconfigurable input system, sound and music, particles, and a suite of editors to create content without touching the code." data-fr="Concr&egrave;tement, le moteur fournit d&eacute;j&agrave; des briques g&eacute;n&eacute;riques et r&eacute;utilisables : un bus d'&eacute;v&eacute;nements, des machines &agrave; &eacute;tats, une horloge de simulation (pause / ralenti / temps narratif), des s&eacute;quences script&eacute;es d&eacute;claratives, un registre d'actions pilot&eacute; par donn&eacute;es, un monde infini en zones, une cam&eacute;ra, un syst&egrave;me d'entr&eacute;es reconfigurable, du son et de la musique, des particules, et une suite d'&eacute;diteurs pour cr&eacute;er le contenu sans toucher au code.">Concretely, the engine already provides generic, reusable building blocks: an event bus, state machines, a simulation clock, declarative scripted sequences, a data-driven action registry, an infinite world in zones, a camera, a reconfigurable input system, sound and music, particles, and a suite of editors.</p>
+  </section>
+  <div class="divider"><hr/></div>
+  <section>
+    <span class="kicker" data-en="// WHY OUR OWN ENGINE" data-fr="// POURQUOI NOTRE PROPRE MOTEUR">// WHY OUR OWN ENGINE</span>
+    <h2 data-en="Because engines die. <em>Folders of text files don't.</em>" data-fr="Parce que les engines meurent. <em>Les dossiers de fichiers texte, non.</em>">Because engines die. <em>Folders of text files don't.</em></h2>
+    <p class="lead" data-en="Unity changes its license. Unreal needs a hundred-gig install. Phaser breaks when a dependency updates. Godot is solid — but still a binary that one day won't run on your OS." data-fr="Unity change sa licence. Unreal demande cent gigas. Phaser casse quand une dépendance se met à jour. Godot est solide — mais reste un binaire qui un jour ne tournera plus.">Unity changes its license. Unreal needs a hundred-gig install. Phaser breaks when a dependency updates. Godot is solid — but still a binary that one day won't run on your OS.</p>
+    <p data-en="A game engine that's a folder of text files. You read them. You modify them. They will keep running on any computer with a browser — for decades. No install. No build. No version mismatch." data-fr="Un moteur qui est un dossier de fichiers texte. On les lit. On les modifie. Ils continueront à tourner sur n'importe quel ordinateur avec un browser — pendant des décennies.">A game engine that's a folder of text files. You read them. You modify them. They will keep running on any computer with a browser — for decades. No install. No build. No version mismatch.</p>
+    <p data-en="<em>Worst case it works. Best case, it works anyway.</em>" data-fr="<em>Au pire ça marche. Au mieux, ça marche aussi.</em>"><em>Worst case it works. Best case, it works anyway.</em></p>
+  </section>
+  <div class="divider"><hr/></div>
+  <section>
+    <span class="kicker" data-en="// ARCHITECTURE" data-fr="// ARCHITECTURE">// ARCHITECTURE</span>
+    <h2 data-en="Four root classes. <em>Composition over inheritance.</em>" data-fr="Quatre classes racines. <em>Composition plutôt qu'héritage.</em>">Four root classes. <em>Composition over inheritance.</em></h2>
+    <table class="spec">
+      <tr><th data-en="Class" data-fr="Classe">Class</th><th data-en="Role" data-fr="Rôle">Role</th></tr>
+      <tr><td>Behavior</td><td data-en="Anything that lives. update(dt), state, bus, dispose." data-fr="Tout ce qui vit. update(dt), état, bus, dispose.">Anything that lives. update(dt), state, bus, dispose.</td></tr>
+      <tr><td>Entity</td><td data-en="A thing with a position. Container of Components — never a monolith." data-fr="Une chose avec une position. Container de Components — jamais un blob.">A thing with a position. Container of Components — never a monolith.</td></tr>
+      <tr><td>Sequence</td><td data-en="Scripted narrative orchestrator. Cinematics, timed events." data-fr="Orchestrateur narratif scripté. Cinématiques, événements temporisés.">Scripted narrative orchestrator. Cinematics, timed events.</td></tr>
+      <tr><td>System</td><td data-en="Transverse singleton — CollisionSystem, AiDirector." data-fr="Singleton transverse — CollisionSystem, AiDirector.">Transverse singleton — CollisionSystem, AiDirector.</td></tr>
+      <tr><td>EventBus</td><td data-en="Publish/subscribe channel. All communication goes through it." data-fr="Canal publish/subscribe. Toute communication passe par lui.">Publish/subscribe channel. All communication goes through it.</td></tr>
+    </table>
+  </section>
+  <div class="pullquote">
+    <span data-en="Open the folder.&nbsp;<span class='accent'>Read the code.</span>&nbsp;Make your own game." data-fr="Ouvre le dossier.&nbsp;<span class='accent'>Lis le code.</span>&nbsp;Fais ton propre jeu.">Open the folder. <span class="accent">Read the code.</span> Make your own game.</span>
+    <span class="sub" data-en="The engine is yours too." data-fr="Le moteur est à toi aussi.">The engine is yours too.</span>
   </div>
-</section>
+  <section id="deluxe">
+    <span class="kicker" data-en="// USB DELUXE" data-fr="// USB DELUXE">// USB DELUXE</span>
+    <h2 data-en="The game, the engine, and every <em>tool</em> we used." data-fr="Le jeu, le moteur, et tous les <em>outils</em> qu'on a utilisés.">The game, the engine, and every <em>tool</em> we used.</h2>
+    <table class="spec">
+      <tr><th data-en="Tool" data-fr="Outil">Tool</th><th data-en="What it does" data-fr="Ce qu'il fait">What it does</th></tr>
+      <tr><td>zone_editor</td><td data-en="Design zones — asteroids, triggers, drawings, force fields." data-fr="Designer des zones — astéroïdes, triggers, dessins, force fields.">Design zones — asteroids, triggers, drawings, force fields.</td></tr>
+      <tr><td>universe_editor</td><td data-en="Macro-map of the universe. Place zones, define travel times." data-fr="Carte macro de l'univers. Placer les zones, définir les temps de voyage.">Macro-map of the universe. Place zones, define travel times.</td></tr>
+      <tr><td>planet_editor</td><td data-en="Build procedural planets — rings, atmospheres, palettes." data-fr="Construire des planètes procédurales — anneaux, atmosphères, palettes.">Build procedural planets — rings, atmospheres, palettes.</td></tr>
+      <tr><td>drawing_editor</td><td data-en="Vector editor: points, lines, polygons, Bezier curves." data-fr="Éditeur vectoriel : points, lignes, polygones, courbes Bézier.">Vector editor: points, lines, polygons, Bezier curves.</td></tr>
+    </table>
+    <div style="margin-top:40px;">
+      <a href="game.html#pledge" class="cta" data-en="See pledge tiers &rarr;" data-fr="Voir les paliers &rarr;">See pledge tiers &rarr;</a>
+      <a href="tech.html" class="cta ghost" data-en="Tech details &rarr;" data-fr="Détails techniques &rarr;">Tech details &rarr;</a>
+    </div>
+  </section>
+</div>
 
+<!-- VIEW TECH -->
+<div id="view-tech" class="view">
+  <section class="hero">
+    <span class="pill" data-en="// TECH MANIFESTO" data-fr="// MANIFESTE TECHNIQUE">// TECH MANIFESTO</span>
+    <h1 data-en="For people who want to&nbsp;<em>understand</em> how it works." data-fr="Pour ceux qui veulent&nbsp;<em>comprendre</em> comment ça marche.">For people who want to&nbsp;<em>understand</em> how it works.</h1>
+    <p class="tag" data-en="Every technical decision behind Galaxtarus, in one place. Why file://. Why vanilla. Why MIDI. Why hand-carved wood." data-fr="Toutes les décisions techniques derrière Galaxtarus, dans un seul endroit.">Every technical decision behind Galaxtarus, in one place. Why file://. Why vanilla. Why MIDI. Why hand-carved wood.</p>
+  </section>
+  <section>
+    <span class="kicker" data-en="// THE GROUND RULE" data-fr="// LA RÈGLE DE BASE">// THE GROUND RULE</span>
+    <h2 data-en="If civilization collapses tomorrow, the game <em>still runs.</em>" data-fr="Si la civilisation s'effondre demain, le jeu <em>marche encore.</em>">If civilization collapses tomorrow, the game <em>still runs.</em></h2>
+    <p class="lead" data-en="And if it doesn't — statistically more likely — the game still runs anyway. When Steam shuts down. When a mandatory patch turns a work of art into an error page. When the storefronts close." data-fr="Et si elle ne s'effondre pas — statistiquement plus probable — le jeu marche quand même. Quand Steam ferme. Quand un patch obligatoire transforme une œuvre en page d'erreur.">And if it doesn't — statistically more likely — the game still runs anyway. When Steam shuts down. When a mandatory patch turns a work of art into an error page. When the storefronts close.</p>
+    <p data-en="<em>Worst case it works. Best case, it works anyway.</em>" data-fr="<em>Au pire ça marche. Au mieux, ça marche aussi.</em>"><em>Worst case it works. Best case, it works anyway.</em></p>
+  </section>
+  <section>
+    <span class="kicker" data-en="// THE STACK" data-fr="// LA STACK">// THE STACK</span>
+    <h2 data-en="What it's built with. <em>And what it's not.</em>" data-fr="Avec quoi c'est construit. <em>Et avec quoi ça ne l'est pas.</em>">What it's built with. <em>And what it's not.</em></h2>
+    <table class="spec">
+      <tr><th data-en="Layer" data-fr="Couche">Layer</th><th data-en="Choice" data-fr="Choix">Choice</th><th data-en="Trade-off" data-fr="Compromis">Trade-off</th></tr>
+      <tr><td data-en="Language" data-fr="Langage">Language</td><td>Vanilla ES6 JS</td><td data-en="No TypeScript. No compile step." data-fr="Pas de TypeScript. Pas de compile.">No TypeScript. No compile step.</td></tr>
+      <tr><td data-en="Modules" data-fr="Modules">Modules</td><td>window.GALAXTARUS</td><td data-en="ES6 modules blocked by CORS on file://." data-fr="Modules ES6 bloqués par CORS en file://.">ES6 modules blocked by CORS on file://.</td></tr>
+      <tr><td data-en="Rendering" data-fr="Rendu">Rendering</td><td>Canvas 2D</td><td data-en="No WebGL. 2D works on anything since 2005." data-fr="Pas de WebGL. La 2D tourne partout depuis 2005.">No WebGL. 2D works on anything since 2005.</td></tr>
+      <tr><td data-en="Audio" data-fr="Audio">Audio</td><td data-en="Web Audio API" data-fr="Web Audio API">Web Audio API</td><td data-en="Procedural synthesis. No samples. Zero load time." data-fr="Synthèse procédurale. Pas de samples. Zéro temps de chargement.">Procedural synthesis. No samples. Zero load time.</td></tr>
+      <tr><td data-en="Network" data-fr="Réseau">Network</td><td data-en="None" data-fr="Aucun">None</td><td data-en="No multiplayer. No cloud. The game is yours, alone." data-fr="Pas de multijoueur. Pas de cloud. Le jeu est à toi, seul.">No multiplayer. No cloud. The game is yours, alone.</td></tr>
+    </table>
+  </section>
+  <div class="divider"><hr/></div>
+  <section>
+    <span class="kicker" data-en="// FAQ" data-fr="// FAQ">// FAQ</span>
+    <h2 data-en="What you'll <em>want to ask.</em>" data-fr="Ce que tu <em>vas vouloir demander.</em>">What you'll <em>want to ask.</em></h2>
+    <p data-en="<strong style='color:#fff'>Why no Godot or Phaser?</strong> Install steps, version mismatches, dependencies that age. We wanted a folder of text files that opens in any browser today and in twenty years." data-fr="<strong style='color:#fff'>Pourquoi pas Godot ou Phaser ?</strong> Étapes d'install, désyncs de version, dépendances qui vieillissent. On voulait un dossier de fichiers texte qui s'ouvre dans n'importe quel browser aujourd'hui et dans vingt ans."><strong style="color:#fff">Why no Godot or Phaser?</strong> Install steps, version mismatches, dependencies that age. We wanted a folder of text files that opens in any browser today and in twenty years.</p>
+    <p data-en="<strong style='color:#fff'>Why 2D?</strong> A 2D game from 1992 still runs. A 3D game from 2002 often doesn't. 2D is the tech that survives decades." data-fr="<strong style='color:#fff'>Pourquoi 2D ?</strong> Un jeu 2D de 1992 tourne encore. Un jeu 3D de 2002 souvent non. La 2D survit aux décennies."><strong style="color:#fff">Why 2D?</strong> A 2D game from 1992 still runs. A 3D game from 2002 often doesn't. 2D is the tech that survives decades.</p>
+    <p data-en="<strong style='color:#fff'>Why hand-carved wood?</strong> Because Raphael is also a chip carver, internationally recognized. The collector tier deserves an object made the same way: by hand, slowly, with care." data-fr="<strong style='color:#fff'>Pourquoi du bois sculpté ?</strong> Parce que Raphaël est aussi chip carver, reconnu à l'international. Le tier collector mérite un objet fait de la même façon : à la main, lentement, avec soin."><strong style="color:#fff">Why hand-carved wood?</strong> Because Raphael is also a chip carver, internationally recognized. The collector tier deserves an object made the same way: by hand, slowly, with care.</p>
+  </section>
+  <div class="pullquote">
+    <span data-en="A folder of files.&nbsp;<span class='accent'>A laptop.</span>&nbsp;Some solar panels." data-fr="Un dossier de fichiers.&nbsp;<span class='accent'>Un laptop.</span>&nbsp;Quelques panneaux solaires.">A folder of files. <span class="accent">A laptop.</span> Some solar panels.</span>
+    <span class="sub" data-en="That's all it takes." data-fr="C'est tout ce qu'il faut.">That's all it takes.</span>
+  </div>
+  <section>
+    <span class="kicker" data-en="// EXAMPLE DATA" data-fr="// DONNÉES D'EXEMPLE">// EXAMPLE DATA</span>
+    <h2 data-en="A chart that <em>draws itself.</em>" data-fr="Un graphique qui <em>se dessine.</em>">A chart that <em>draws itself.</em></h2>
+    <p class="lead" data-en="Pure SVG, no library. The bars grow from zero every time the chart scrolls into view." data-fr="SVG pur, sans librairie. Les barres montent depuis zéro à chaque fois que le graphique entre à l'écran.">Pure SVG, no library. The bars grow from zero every time the chart scrolls into view.</p>
+    <div class="chart" id="demo-chart"></div>
+  </section>
+  <section>
+    <div style="text-align:center;">
+      <a href="engine.html" class="cta" data-en="Back to the engine &rarr;" data-fr="Retour au moteur &rarr;">Back to the engine &rarr;</a>
+      <a href="game.html" class="cta ghost" data-en="Back to the game &rarr;" data-fr="Retour au jeu &rarr;">Back to the game &rarr;</a>
+    </div>
+  </section>
+</div>
+
+<!-- VIEW SURVIVABLE -->
+<div id="view-survivable" class="view">
+  <section class="hero">
+    <span class="pill" data-en="// SURVIVABLE SOFTWARE" data-fr="// LOGICIEL SURVIVABLE">// SURVIVABLE SOFTWARE</span>
+    <h1 data-en="One engine. <em>Thirty</em> ways it outlives the&nbsp;network." data-fr="Un moteur. <em>Trente</em> fa&ccedil;ons de survivre sans&nbsp;r&eacute;seau.">One engine. <em>Thirty</em> ways it outlives the&nbsp;network.</h1>
+    <p class="tag" data-en="Zero dependencies. Runs from a file. Survives offline. Here is every real-world use &mdash; with the numbers behind it." data-fr="Z&eacute;ro d&eacute;pendance. Tourne depuis un fichier. Survit hors-ligne. Voici chaque utilisation r&eacute;elle &mdash; avec les chiffres derri&egrave;re.">Zero dependencies. Runs from a file. Survives offline. Here is every real-world use &mdash; with the numbers behind it.</p>
+  </section>
+
+  <section>
+    <span class="kicker" data-en="// NOT JUST A TOY ENGINE" data-fr="// PAS QU'UN MOTEUR DE PETITS JEUX">// NOT JUST A TOY ENGINE</span>
+    <h2 data-en="It's not just an engine for <em>small games.</em>" data-fr="Ce n'est pas qu'un moteur de <em>petits jeux.</em>">It's not just an engine for <em>small games.</em></h2>
+    <p class="lead" data-en="Galaxtarus is an interactive engine written entirely in native JavaScript, with zero dependencies, that opens in a plain browser &mdash; from a file, from a USB stick, with no server and no connection. That is precisely what makes it useful far beyond games." data-fr="Galaxtarus est un moteur interactif &eacute;crit enti&egrave;rement en JavaScript natif, sans aucune d&eacute;pendance, qui s'ouvre dans un simple navigateur &mdash; depuis un fichier, depuis une cl&eacute; USB, sans serveur et sans connexion. C'est pr&eacute;cis&eacute;ment ce qui le rend utile bien au-del&agrave; du jeu.">Galaxtarus is an interactive engine written entirely in native JavaScript, with zero dependencies, that opens in a plain browser &mdash; from a file, from a USB stick, with no server and no connection. That is precisely what makes it useful far beyond games.</p>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-num">0</div><div class="stat-lab" data-en="external dependency &mdash; no <code>fetch</code>, no CDN, empty <code>libs/</code> folder" data-fr="d&eacute;pendance externe &mdash; aucun <code>fetch</code>, aucun CDN, dossier <code>libs/</code> vide">external dependency &mdash; no <code>fetch</code>, no CDN, empty <code>libs/</code> folder</div></div>
+      <div class="stat-card"><div class="stat-num small">file://</div><div class="stat-lab" data-en="runs offline, no server, copyable onto a USB stick" data-fr="fonctionne hors-ligne, sans serveur, copiable sur cl&eacute; USB">runs offline, no server, copyable onto a USB stick</div></div>
+      <div class="stat-card"><div class="stat-num">8</div><div class="stat-lab" data-en="built-in visual editors (drawing, zones, universe, planets, dialogues, sounds&hellip;)" data-fr="&eacute;diteurs visuels int&eacute;gr&eacute;s (dessin, zones, univers, plan&egrave;tes, dialogues, sons&hellip;)">built-in visual editors (drawing, zones, universe, planets, dialogues, sounds&hellip;)</div></div>
+      <div class="stat-card"><div class="stat-num small">i18n</div><div class="stat-lab" data-en="multilingual offline, extensible with a single language file" data-fr="multilingue offline, extensible par simple fichier de langue">multilingual offline, extensible with a single language file</div></div>
+    </div>
+  </section>
+
+  <div class="divider"><hr/></div>
+  <section>
+    <span class="kicker" data-en="// THE FAMILIES" data-fr="// LES FAMILLES">// THE FAMILIES</span>
+    <h2 data-en="Thirty uses, <em>six families.</em>" data-fr="Trente usages, <em>six familles.</em>">Thirty uses, <em>six families.</em></h2>
+    <p class="lead" data-en="The same engine, regrouped. Share of the thirty real-world uses by family." data-fr="Le m&ecirc;me moteur, regroup&eacute;. Part des trente utilisations r&eacute;elles par famille.">The same engine, regrouped. Share of the thirty real-world uses by family.</p>
+    <div class="donut-chart" id="surv-donut"></div>
+  </section>
+
+  <section>
+    <span class="kicker" data-en="// BY THE NUMBERS" data-fr="// EN CHIFFRES">// BY THE NUMBERS</span>
+    <h2 data-en="How many uses <em>per family.</em>" data-fr="Combien d'usages <em>par famille.</em>">How many uses <em>per family.</em></h2>
+    <div class="hbars-chart" id="surv-hbars"></div>
+  </section>
+
+  <div class="divider"><hr/></div>
+  <section>
+    <span class="kicker" data-en="// CAPABILITIES" data-fr="// CAPACIT&Eacute;S">// CAPABILITIES</span>
+    <h2 data-en="Built for <em>autonomy.</em>" data-fr="Con&ccedil;u pour <em>l'autonomie.</em>">Built for <em>autonomy.</em></h2>
+    <p class="lead" data-en="Galaxtarus against a typical mainstream engine, on the properties that make software survive." data-fr="Galaxtarus face &agrave; un moteur grand public classique, sur les propri&eacute;t&eacute;s qui font survivre un logiciel.">Galaxtarus against a typical mainstream engine, on the properties that make software survive.</p>
+    <div class="radar-chart" id="surv-radar"></div>
+    <div class="radar-key">
+      <span class="rk rk-a" data-en="Galaxtarus" data-fr="Galaxtarus">Galaxtarus</span>
+      <span class="rk rk-b" data-en="Typical mainstream engine" data-fr="Moteur grand public classique">Typical mainstream engine</span>
+    </div>
+  </section>
+
+  <div class="divider"><hr/></div>
+  <section>
+    <span class="kicker" data-en="// VS OTHER ENGINES" data-fr="// FACE AUX AUTRES MOTEURS">// VS OTHER ENGINES</span>
+    <h2 data-en="What survives <em>a decade offline.</em>" data-fr="Ce qui survit <em>dix ans hors-ligne.</em>">What survives <em>a decade offline.</em></h2>
+    <div class="compare-matrix">
+      <div class="cm-row cm-head">
+        <div class="cm-name"></div>
+        <div class="cm-cell" data-en="Install" data-fr="Installation">Install</div>
+        <div class="cm-cell" data-en="Dependencies" data-fr="D&eacute;pendances">Dependencies</div>
+        <div class="cm-cell" data-en="Offline (file://)" data-fr="Hors-ligne (file://)">Offline (file://)</div>
+        <div class="cm-cell" data-en="Longevity" data-fr="Long&eacute;vit&eacute;">Longevity</div>
+      </div>
+      <div class="cm-row cm-hero">
+        <div class="cm-name">Galaxtarus</div>
+        <div class="cm-cell good" data-en="A folder" data-fr="Un dossier">A folder</div>
+        <div class="cm-cell good">0</div>
+        <div class="cm-cell good">&#10003;</div>
+        <div class="cm-cell good">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      </div>
+      <div class="cm-row">
+        <div class="cm-name">Unity</div>
+        <div class="cm-cell bad" data-en="~30 GB" data-fr="~30 Go">~30 GB</div>
+        <div class="cm-cell bad" data-en="many" data-fr="nombreuses">many</div>
+        <div class="cm-cell mid" data-en="partial" data-fr="partiel">partial</div>
+        <div class="cm-cell bad">&#9733;&#9733;</div>
+      </div>
+      <div class="cm-row">
+        <div class="cm-name">Unreal</div>
+        <div class="cm-cell bad" data-en="~100 GB" data-fr="~100 Go">~100 GB</div>
+        <div class="cm-cell bad" data-en="many" data-fr="nombreuses">many</div>
+        <div class="cm-cell mid" data-en="partial" data-fr="partiel">partial</div>
+        <div class="cm-cell bad">&#9733;&#9733;</div>
+      </div>
+      <div class="cm-row">
+        <div class="cm-name">Godot</div>
+        <div class="cm-cell mid" data-en="~0.1 GB" data-fr="~0,1 Go">~0.1 GB</div>
+        <div class="cm-cell mid" data-en="few" data-fr="peu">few</div>
+        <div class="cm-cell good">&#10003;</div>
+        <div class="cm-cell mid">&#9733;&#9733;&#9733;</div>
+      </div>
+      <div class="cm-row">
+        <div class="cm-name">Phaser</div>
+        <div class="cm-cell mid" data-en="npm + build" data-fr="npm + build">npm + build</div>
+        <div class="cm-cell bad" data-en="many" data-fr="nombreuses">many</div>
+        <div class="cm-cell mid" data-en="after build" data-fr="apr&egrave;s build">after build</div>
+        <div class="cm-cell bad">&#9733;&#9733;</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><hr/></div>
+  <section>
+    <span class="kicker" data-en="// ALL 30 USES" data-fr="// LES 30 USAGES">// ALL 30 USES</span>
+    <h2 data-en="Every <em>real-world</em> use." data-fr="Chaque utilisation <em>r&eacute;elle.</em>">Every <em>real-world</em> use.</h2>
+    <div class="uses-families">
+
+      <div class="uses-family" data-fam="edu">
+        <h3 class="uses-fam-head"><span class="uses-fam-dot"></span><span data-en="Education &amp; science" data-fr="&Eacute;ducation &amp; sciences">Education &amp; science</span><span class="uses-fam-n">7</span></h3>
+        <div class="uses-list">
+          <div class="use-item"><span class="use-n">01</span><div class="use-body"><strong data-en="Offline teaching kit" data-fr="Trousse p&eacute;dagogique hors-ligne">Offline teaching kit</strong><span data-en="Interactive courses for schools with no internet, multilingual via the i18n system." data-fr="Cours interactifs pour &eacute;coles sans internet, multilingues via le syst&egrave;me i18n.">Interactive courses for schools with no internet, multilingual via the i18n system.</span></div></div>
+          <div class="use-item"><span class="use-n">05</span><div class="use-body"><strong data-en="Teaching astronomy" data-fr="P&eacute;dagogie de l'astronomie">Teaching astronomy</strong><span data-en="Orbits, stars and nebulae via Universe, Starfield and OrbitEllipse." data-fr="Orbites, &eacute;toiles et n&eacute;buleuses via Universe, Starfield et OrbitEllipse.">Orbits, stars and nebulae via Universe, Starfield and OrbitEllipse.</span></div></div>
+          <div class="use-item"><span class="use-n">09</span><div class="use-body"><strong data-en="Literacy tool" data-fr="Outil d'alphab&eacute;tisation">Literacy tool</strong><span data-en="Learning to read, extensible to any language via a single file." data-fr="Apprentissage de la lecture, extensible &agrave; toute langue par fichier.">Learning to read, extensible to any language via a single file.</span></div></div>
+          <div class="use-item"><span class="use-n">10</span><div class="use-body"><strong data-en="Programming teaching aid" data-fr="Support d'enseignement de la programmation">Programming teaching aid</strong><span data-en="A clear layered architecture to teach OOP and patterns." data-fr="Architecture en couches claire pour enseigner la POO et les patterns.">A clear layered architecture to teach OOP and patterns.</span></div></div>
+          <div class="use-item"><span class="use-n">22</span><div class="use-body"><strong data-en="Offline planetarium / star atlas" data-fr="Plan&eacute;tarium / atlas stellaire offline">Offline planetarium / star atlas</strong><span data-en="A configurable sky (star palettes, shooting stars) viewable anywhere." data-fr="Ciel param&eacute;trable (palettes d'&eacute;toiles, &eacute;toiles filantes) consultable partout.">A configurable sky (star palettes, shooting stars) viewable anywhere.</span></div></div>
+          <div class="use-item"><span class="use-n">23</span><div class="use-body"><strong data-en="Reusable education platform" data-fr="Plateforme &eacute;ducative r&eacute;utilisable">Reusable education platform</strong><span data-en="One agnostic engine, many subjects: change the content, not the code." data-fr="Un moteur agnostique, plusieurs mati&egrave;res : on change le contenu, pas le code.">One agnostic engine, many subjects: change the content, not the code.</span></div></div>
+          <div class="use-item"><span class="use-n">26</span><div class="use-body"><strong data-en="Ecosystem simulation" data-fr="Simulation d'&eacute;cosyst&egrave;me">Ecosystem simulation</strong><span data-en="Parallax layers, nebulae and randomness for natural sciences." data-fr="Couches en parallax, n&eacute;buleuses et al&eacute;as pour les sciences naturelles.">Parallax layers, nebulae and randomness for natural sciences.</span></div></div>
+        </div>
+      </div>
+
+      <div class="uses-family" data-fam="form">
+        <h3 class="uses-fam-head"><span class="uses-fam-dot"></span><span data-en="Training &amp; procedures" data-fr="Formation &amp; proc&eacute;dures">Training &amp; procedures</span><span class="uses-fam-n">5</span></h3>
+        <div class="uses-list">
+          <div class="use-item"><span class="use-n">02</span><div class="use-body"><strong data-en="Training simulator" data-fr="Simulateur de formation">Training simulator</strong><span data-en="Reproduce a technical gesture step by step with scripted sequences." data-fr="Reproduire un geste technique &eacute;tape par &eacute;tape avec les s&eacute;quences script&eacute;es.">Reproduce a technical gesture step by step with scripted sequences.</span></div></div>
+          <div class="use-item"><span class="use-n">06</span><div class="use-body"><strong data-en="First-aid guide" data-fr="Guide de premiers secours">First-aid guide</strong><span data-en="Medical procedures played as sequences + branching dialogues." data-fr="Proc&eacute;dures m&eacute;dicales jou&eacute;es en s&eacute;quences + dialogues &agrave; embranchements.">Medical procedures played as sequences + branching dialogues.</span></div></div>
+          <div class="use-item"><span class="use-n">13</span><div class="use-body"><strong data-en="Crisis-management simulator" data-fr="Simulateur de gestion de crise">Crisis-management simulator</strong><span data-en="Decision trees driven by EventBus + StateMachine." data-fr="Arbres de d&eacute;cision pilot&eacute;s par EventBus + StateMachine.">Decision trees driven by EventBus + StateMachine.</span></div></div>
+          <div class="use-item"><span class="use-n">27</span><div class="use-body"><strong data-en="Serious games (health, safety)" data-fr="Jeux s&eacute;rieux (sant&eacute;, s&eacute;curit&eacute;)">Serious games (health, safety)</strong><span data-en="Complete gamified training on an already proven engine." data-fr="Formations ludiques compl&egrave;tes sur un moteur d&eacute;j&agrave; &eacute;prouv&eacute;.">Complete gamified training on an already proven engine.</span></div></div>
+          <div class="use-item"><span class="use-n">28</span><div class="use-body"><strong data-en="Guided checklists &amp; quests" data-fr="Checklists et qu&ecirc;tes guid&eacute;es">Guided checklists &amp; quests</strong><span data-en="Procedures to validate via actions, triggers and chained sequences." data-fr="Proc&eacute;dures &agrave; valider via actions, triggers et s&eacute;quences encha&icirc;n&eacute;es.">Procedures to validate via actions, triggers and chained sequences.</span></div></div>
+        </div>
+      </div>
+
+      <div class="uses-family" data-fam="crea">
+        <h3 class="uses-fam-head"><span class="uses-fam-dot"></span><span data-en="Creation &amp; media" data-fr="Cr&eacute;ation &amp; m&eacute;dias">Creation &amp; media</span><span class="uses-fam-n">4</span></h3>
+        <div class="uses-list">
+          <div class="use-item"><span class="use-n">03</span><div class="use-body"><strong data-en="Animated technical manual" data-fr="Manuel technique anim&eacute;">Animated technical manual</strong><span data-en="Manuals and diagrams animated via the keyframe vector drawing editor." data-fr="Notices et sch&eacute;mas anim&eacute;s via l'&eacute;diteur de dessin vectoriel &agrave; keyframes.">Manuals and diagrams animated via the keyframe vector drawing editor.</span></div></div>
+          <div class="use-item"><span class="use-n">14</span><div class="use-body"><strong data-en="Animated data visualization" data-fr="Visualisation de donn&eacute;es anim&eacute;e">Animated data visualization</strong><span data-en="Evolving charts and diagrams via the render engine and timeline." data-fr="Graphiques et sch&eacute;mas &eacute;volutifs via le moteur de rendu et la timeline.">Evolving charts and diagrams via the render engine and timeline.</span></div></div>
+          <div class="use-item"><span class="use-n">20</span><div class="use-body"><strong data-en="Vector animation studio" data-fr="Studio d'animation vectorielle">Vector animation studio</strong><span data-en="Create animations (keyframes, easing) with the DrawEditor." data-fr="Cr&eacute;er des animations (keyframes, easing) avec le DrawEditor.">Create animations (keyframes, easing) with the DrawEditor.</span></div></div>
+          <div class="use-item"><span class="use-n">21</span><div class="use-body"><strong data-en="Sound &amp; ambiance editor" data-fr="&Eacute;diteur de sons et d'ambiances">Sound &amp; ambiance editor</strong><span data-en="Compose sounds and music via SoundEditor, AudioManager, MusicPlayer." data-fr="Composer sons et musiques via SoundEditor, AudioManager, MusicPlayer.">Compose sounds and music via SoundEditor, AudioManager, MusicPlayer.</span></div></div>
+        </div>
+      </div>
+
+      <div class="uses-family" data-fam="tool">
+        <h3 class="uses-fam-head"><span class="uses-fam-dot"></span><span data-en="Tools &amp; prototyping" data-fr="Outils &amp; prototypage">Tools &amp; prototyping</span><span class="uses-fam-n">4</span></h3>
+        <div class="uses-list">
+          <div class="use-item"><span class="use-n">07</span><div class="use-body"><strong data-en="Territory mapping" data-fr="Cartographie de territoire">Territory mapping</strong><span data-en="Represent zones and points of interest with the ZoneEditor / UniverseEditor." data-fr="Repr&eacute;senter zones et points d'int&eacute;r&ecirc;t avec le ZoneEditor / UniverseEditor.">Represent zones and points of interest with the ZoneEditor / UniverseEditor.</span></div></div>
+          <div class="use-item"><span class="use-n">17</span><div class="use-body"><strong data-en="Local dashboard / HMI" data-fr="Tableau de bord / IHM locale">Local dashboard / HMI</strong><span data-en="A lightweight human-machine interface for local hardware, no network." data-fr="Interface homme-machine l&eacute;g&egrave;re pour mat&eacute;riel local, sans r&eacute;seau.">A lightweight human-machine interface for local hardware, no network.</span></div></div>
+          <div class="use-item"><span class="use-n">18</span><div class="use-body"><strong data-en="Behavior test bench" data-fr="Banc de test de comportements">Behavior test bench</strong><span data-en="Prototype and validate FSM logic (robotics, automata) in isolation." data-fr="Prototyper et valider des logiques FSM (robotique, automates) isol&eacute;ment.">Prototype and validate FSM logic (robotics, automata) in isolation.</span></div></div>
+          <div class="use-item"><span class="use-n">25</span><div class="use-body"><strong data-en="Rapid UI prototyping" data-fr="Prototypage rapide d'interfaces">Rapid UI prototyping</strong><span data-en="Interactive mockups thanks to the editors and primitive registries." data-fr="Maquettes interactives gr&acirc;ce aux &eacute;diteurs et registres de primitives.">Interactive mockups thanks to the editors and primitive registries.</span></div></div>
+        </div>
+      </div>
+
+      <div class="uses-family" data-fam="patr">
+        <h3 class="uses-fam-head"><span class="uses-fam-dot"></span><span data-en="Heritage &amp; autonomy" data-fr="Patrimoine &amp; autonomie">Heritage &amp; autonomy</span><span class="uses-fam-n">5</span></h3>
+        <div class="uses-list">
+          <div class="use-item"><span class="use-n">04</span><div class="use-body"><strong data-en="Interactive knowledge archive" data-fr="Archive de savoirs interactive">Interactive knowledge archive</strong><span data-en="Freeze a skill into a standalone file, copyable to USB." data-fr="Figer un savoir-faire dans un fichier autonome, copiable sur USB.">Freeze a skill into a standalone file, copyable to USB.</span></div></div>
+          <div class="use-item"><span class="use-n">08</span><div class="use-body"><strong data-en="Step-by-step workshop docs" data-fr="Documentation d'atelier pas-&agrave;-pas">Step-by-step workshop docs</strong><span data-en="Maintenance and repair guided by spatial triggers." data-fr="Maintenance et r&eacute;paration guid&eacute;es par d&eacute;clencheurs (triggers) spatiaux.">Maintenance and repair guided by spatial triggers.</span></div></div>
+          <div class="use-item"><span class="use-n">11</span><div class="use-body"><strong data-en="Standalone info kiosk" data-fr="Kiosque d'information autonome">Standalone info kiosk</strong><span data-en="A museum or town-hall kiosk that runs with no server, in file://." data-fr="Borne de mus&eacute;e ou de mairie qui tourne sans serveur, en file://.">A museum or town-hall kiosk that runs with no server, in file://.</span></div></div>
+          <div class="use-item"><span class="use-n">24</span><div class="use-body"><strong data-en="Wayfinding kiosk" data-fr="Borne d'orientation (wayfinding)">Wayfinding kiosk</strong><span data-en="Interactive routes and signage via zones and triggers." data-fr="Parcours et signal&eacute;tique interactifs via zones et d&eacute;clencheurs.">Interactive routes and signage via zones and triggers.</span></div></div>
+          <div class="use-item"><span class="use-n">30</span><div class="use-body"><strong data-en="Survivable software base" data-fr="Base logicielle survivable">Survivable software base</strong><span data-en="Runs on old hardware, no dependency: a browser is enough." data-fr="S'ex&eacute;cute sur du vieux mat&eacute;riel, sans d&eacute;pendance : un navigateur suffit.">Runs on old hardware, no dependency: a browser is enough.</span></div></div>
+        </div>
+      </div>
+
+      <div class="uses-family" data-fam="reci">
+        <h3 class="uses-fam-head"><span class="uses-fam-dot"></span><span data-en="Story, culture &amp; care" data-fr="R&eacute;cit, culture &amp; soin">Story, culture &amp; care</span><span class="uses-fam-n">5</span></h3>
+        <div class="uses-list">
+          <div class="use-item"><span class="use-n">12</span><div class="use-body"><strong data-en="Choose-your-own-adventure" data-fr="Livre dont vous &ecirc;tes le h&eacute;ros">Choose-your-own-adventure</strong><span data-en="Branching stories via the dialogue system and state machines." data-fr="R&eacute;cits &agrave; choix multiples via le syst&egrave;me de dialogues et les machines &agrave; &eacute;tats.">Branching stories via the dialogue system and state machines.</span></div></div>
+          <div class="use-item"><span class="use-n">15</span><div class="use-body"><strong data-en="Historical reenactment" data-fr="Reconstitution historique">Historical reenactment</strong><span data-en="Events replayed as scripted, narrated cinematics." data-fr="&Eacute;v&eacute;nements rejou&eacute;s en cin&eacute;matiques script&eacute;es et comment&eacute;es.">Events replayed as scripted, narrated cinematics.</span></div></div>
+          <div class="use-item"><span class="use-n">16</span><div class="use-body"><strong data-en="Pictogram communication" data-fr="Communication par pictogrammes">Pictogram communication</strong><span data-en="A communication aid (disability) with custom drawings and dialogues." data-fr="Aide &agrave; la communication (handicap) avec dessins et dialogues sur mesure.">A communication aid (disability) with custom drawings and dialogues.</span></div></div>
+          <div class="use-item"><span class="use-n">19</span><div class="use-body"><strong data-en="Therapeutic aid" data-fr="Support th&eacute;rapeutique">Therapeutic aid</strong><span data-en="Controlled exposure and exercises paced by the simulation clock." data-fr="Exposition contr&ocirc;l&eacute;e et exercices rythm&eacute;s par l'horloge de simulation.">Controlled exposure and exercises paced by the simulation clock.</span></div></div>
+          <div class="use-item"><span class="use-n">29</span><div class="use-body"><strong data-en="Cultural transmission" data-fr="Transmission culturelle">Cultural transmission</strong><span data-en="Animated, multilingual, narrated tales, to share without infrastructure." data-fr="Contes anim&eacute;s, multilingues et sonoris&eacute;s, &agrave; diffuser sans infrastructure.">Animated, multilingual, narrated tales, to share without infrastructure.</span></div></div>
+        </div>
+      </div>
+
+    </div>
+    <p class="factual" data-en="<strong>The factual point.</strong> Every use rests on properties verifiable in the code: zero external dependency, <code>file://</code> execution (offline, on USB), strict engine / content separation, declarative serialized data, built-in internationalization, and a suite of visual editors. None of these capabilities needs the internet &mdash; they keep running exactly the same way, connected or not." data-fr="<strong>Le point factuel.</strong> Toutes ces utilisations reposent sur des propri&eacute;t&eacute;s v&eacute;rifiables dans le code : z&eacute;ro d&eacute;pendance externe, ex&eacute;cution en <code>file://</code> (hors-ligne, sur USB), s&eacute;paration stricte moteur / contenu, donn&eacute;es d&eacute;claratives et s&eacute;rialis&eacute;es, internationalisation int&eacute;gr&eacute;e, et une suite d'&eacute;diteurs visuels. Aucune de ces capacit&eacute;s n'a besoin d'internet &mdash; elles continuent de tourner exactement de la m&ecirc;me fa&ccedil;on connect&eacute;es ou non."><strong>The factual point.</strong> Every use rests on properties verifiable in the code: zero external dependency, <code>file://</code> execution, strict engine / content separation, declarative serialized data, built-in internationalization, and a suite of visual editors. None of these needs the internet.</p>
+  </section>
+
+  <div class="pullquote">
+    <span data-en="Where the network stops,&nbsp;<span class='accent'>this engine keeps running.</span>" data-fr="L&agrave; o&ugrave; le r&eacute;seau s'arr&ecirc;te,&nbsp;<span class='accent'>ce moteur continue.</span>">Where the network stops, <span class="accent">this engine keeps running.</span></span>
+    <span class="sub" data-en="A folder of text files doesn't die." data-fr="Un dossier de fichiers texte ne meurt pas.">A folder of text files doesn't die.</span>
+  </div>
+  <section>
+    <div style="text-align:center;">
+      <a href="engine.html" class="cta" data-en="Back to the engine &rarr;" data-fr="Retour au moteur &rarr;">Back to the engine &rarr;</a>
+      <a href="index.html" class="cta ghost" data-en="Back home &rarr;" data-fr="Retour &agrave; l'accueil &rarr;">Back home &rarr;</a>
+    </div>
+  </section>
+</div>
+
+<!-- VIEW MANIFESTO -->
+<div id="view-manifesto" class="view">
+  <section class="hero">
+    <span class="pill" data-en="// MANIFESTO" data-fr="// MANIFESTE">// MANIFESTO</span>
+    <h1 data-en="As long as there is a machine, a key, and&nbsp;<em>someone to pass it on.</em>" data-fr="Tant qu'il reste une machine, une cl&eacute;, et&nbsp;<em>quelqu'un pour la transmettre.</em>">As long as there is a machine, a key, and&nbsp;<em>someone to pass it on.</em></h1>
+    <p class="tag" data-en="A quiet refusal: the refusal to depend." data-fr="Un refus tranquille : celui de d&eacute;pendre.">A quiet refusal: the refusal to depend.</p>
+  </section>
+  <section class="manifesto">
+    <p class="lead" data-en="There was a time when a book was enough. You could hold it, lend it, hide it, save it from a fire. Knowledge fit in our hands, and no one could switch it off from afar." data-fr="Il fut un temps o&ugrave; un livre suffisait. On pouvait le tenir, le pr&ecirc;ter, le cacher, le sauver d'un incendie. Le savoir tenait dans nos mains, et personne ne pouvait l'&eacute;teindre &agrave; distance.">There was a time when a book was enough. You could hold it, lend it, hide it, save it from a fire. Knowledge fit in our hands, and no one could switch it off from afar.</p>
+    <p data-en="Today, almost everything we know how to do depends on an invisible thread. Our maps, our courses, our trades, our memories live elsewhere &mdash; on machines we never see, with companies we do not know, behind subscriptions that can stop overnight. We gained in comfort what we lost in independence. Cut the thread, and whole parts of our lives go dark at once." data-fr="Aujourd'hui, presque tout ce que nous savons faire d&eacute;pend d'un fil invisible. Nos cartes, nos cours, nos m&eacute;tiers, nos souvenirs vivent ailleurs &mdash; sur des machines que nous ne voyons pas, chez des entreprises que nous ne connaissons pas, derri&egrave;re des abonnements qui peuvent s'arr&ecirc;ter du jour au lendemain. Nous avons gagn&eacute; en confort ce que nous avons perdu en ind&eacute;pendance. Coupez le fil, et des pans entiers de nos vies s'&eacute;teignent d'un coup.">Today, almost everything we know how to do depends on an invisible thread. Our maps, our courses, our trades, our memories live elsewhere &mdash; on machines we never see, with companies we do not know, behind subscriptions that can stop overnight. We gained in comfort what we lost in independence. Cut the thread, and whole parts of our lives go dark at once.</p>
+    <p class="manifesto-line" data-en="Galaxtarus was born of a quiet refusal: the refusal to <em>depend.</em>" data-fr="Galaxtarus est n&eacute; d'un refus tranquille : celui de <em>d&eacute;pendre.</em>">Galaxtarus was born of a quiet refusal: the refusal to <em>depend.</em></p>
+    <p data-en="It is a simple tool, in appearance. It opens the way you open a door, without asking anyone's permission. No account to create, no connection to wait for, no update deciding in our place. It fits on a key you slip into your pocket. You can copy it a thousand times, give it to a neighbour, carry it to the end of the world or to the bottom of a valley with no network. Where everything else stops, it keeps going." data-fr="C'est un outil simple en apparence. Il s'ouvre comme on ouvre une porte, sans demander la permission &agrave; personne. Pas de compte &agrave; cr&eacute;er, pas de connexion &agrave; attendre, pas de mise &agrave; jour qui d&eacute;cide &agrave; notre place. Il tient sur une cl&eacute; qu'on glisse dans sa poche. On peut le copier mille fois, le donner &agrave; un voisin, l'emporter au bout du monde ou au fond d'une vall&eacute;e sans r&eacute;seau. L&agrave; o&ugrave; tout le reste s'arr&ecirc;te, lui continue.">It is a simple tool, in appearance. It opens the way you open a door, without asking anyone's permission. No account to create, no connection to wait for, no update deciding in our place. It fits on a key you slip into your pocket. You can copy it a thousand times, give it to a neighbour, carry it to the end of the world or to the bottom of a valley with no network. Where everything else stops, it keeps going.</p>
+    <p data-en="But a tool is nothing without what you put inside it. And what we put inside is ourselves: what we know, what we want to pass on, what we refuse to let disappear. The gesture of a doctor saving a life. The method of a craftsman who spent thirty years learning it. The tale a grandmother tells in a language no one writes anymore. A map, a procedure, a lesson, a memory. Galaxtarus does not create this knowledge &mdash; it gives it a body, a living, animated form that can be shown, replayed, understood, and made understood." data-fr="Mais un outil n'est rien sans ce qu'on met dedans. Et ce qu'on met dedans, c'est nous : ce que nous savons, ce que nous voulons transmettre, ce que nous refusons de laisser dispara&icirc;tre. Le geste d'un m&eacute;decin qui sauve une vie. La m&eacute;thode d'un artisan qui a mis trente ans &agrave; l'apprendre. Le conte qu'une grand-m&egrave;re raconte dans une langue que plus personne n'&eacute;crit. Une carte, une proc&eacute;dure, une le&ccedil;on, une m&eacute;moire. Galaxtarus ne cr&eacute;e pas ce savoir &mdash; il lui donne un corps, une forme vivante, anim&eacute;e, que l'on peut montrer, rejouer, comprendre et faire comprendre.">But a tool is nothing without what you put inside it. And what we put inside is ourselves: what we know, what we want to pass on, what we refuse to let disappear. The gesture of a doctor saving a life. The method of a craftsman who spent thirty years learning it. The tale a grandmother tells in a language no one writes anymore. A map, a procedure, a lesson, a memory. Galaxtarus does not create this knowledge &mdash; it gives it a body, a living, animated form that can be shown, replayed, understood, and made understood.</p>
+    <p data-en="For understanding alone is not enough. You have to be able to explain. A text is read, but a thing that moves, that responds, that you handle, is learned differently &mdash; through the body, through trial, through play. It is the difference between reading an instrument's manual and holding it in your hands. Galaxtarus turns the dead knowledge of pages into living knowledge you walk through." data-fr="Car comprendre seul ne suffit pas. Il faut pouvoir expliquer. Un texte se lit, mais une chose qui bouge, qui r&eacute;pond, qu'on manipule, s'apprend autrement &mdash; par le corps, par l'essai, par le jeu. C'est la diff&eacute;rence entre lire la notice d'un instrument et le tenir entre ses mains. Galaxtarus transforme le savoir mort des pages en savoir vivant que l'on traverse.">For understanding alone is not enough. You have to be able to explain. A text is read, but a thing that moves, that responds, that you handle, is learned differently &mdash; through the body, through trial, through play. It is the difference between reading an instrument's manual and holding it in your hands. Galaxtarus turns the dead knowledge of pages into living knowledge you walk through.</p>
+    <p data-en="We believe this capacity should belong to no one in particular. Not to the rich, not to the connected, not to those who live near the big cities. A teacher in a school without reliable electricity deserves the same tools as a university. A first responder in a camp, a farmer on their land, a curious child far from everything: all have the right to learn, to create, to pass on. Knowledge has value only if it circulates, and it circulates freely only if it depends on nothing." data-fr="Nous croyons que cette capacit&eacute; ne devrait appartenir &agrave; personne en particulier. Ni aux riches, ni aux connect&eacute;s, ni &agrave; ceux qui vivent pr&egrave;s des grandes villes. Un enseignant dans une &eacute;cole sans &eacute;lectricit&eacute; fiable m&eacute;rite les m&ecirc;mes outils qu'une universit&eacute;. Un secouriste dans un camp, un agriculteur sur ses terres, un enfant curieux loin de tout : tous ont le droit d'apprendre, de cr&eacute;er, de transmettre. La connaissance n'a de valeur que si elle circule, et elle ne circule librement que si elle ne d&eacute;pend de rien.">We believe this capacity should belong to no one in particular. Not to the rich, not to the connected, not to those who live near the big cities. A teacher in a school without reliable electricity deserves the same tools as a university. A first responder in a camp, a farmer on their land, a curious child far from everything: all have the right to learn, to create, to pass on. Knowledge has value only if it circulates, and it circulates freely only if it depends on nothing.</p>
+    <p data-en="We do not believe in magic. No tool replaces work, rigour, patiently verified truth. A beautiful interface does not make false information true. That is why, at the heart of everything, there is the source: the right text, written by someone who knows. The rest is only a way of making it clear, beautiful, and accessible. Form serves substance, never the other way around." data-fr="Nous ne croyons pas &agrave; la magie. Aucun outil ne remplace le travail, la rigueur, la v&eacute;rit&eacute; patiemment v&eacute;rifi&eacute;e. Une belle interface ne rend pas une fausse information vraie. C'est pourquoi, au c&oelig;ur de tout, il y a la source : le texte juste, &eacute;crit par quelqu'un qui sait. Le reste n'est qu'une mani&egrave;re de le rendre clair, beau et accessible. La forme sert le fond, jamais l'inverse.">We do not believe in magic. No tool replaces work, rigour, patiently verified truth. A beautiful interface does not make false information true. That is why, at the heart of everything, there is the source: the right text, written by someone who knows. The rest is only a way of making it clear, beautiful, and accessible. Form serves substance, never the other way around.</p>
+    <p data-en="And we believe in resilience. Not out of fear, but out of wisdom. A civilization that stores all its knowledge in one place, behind a single door, is taking a great risk. Libraries burn, networks fall, companies close, wars cut the cables. What survives is what has been copied, shared, scattered across a thousand hands. The best protection for an idea is that it exists everywhere at once." data-fr="Et nous croyons &agrave; la r&eacute;silience. Pas par peur, mais par sagesse. Une civilisation qui range tout son savoir dans un seul endroit, derri&egrave;re une seule porte, joue gros. Les biblioth&egrave;ques br&ucirc;lent, les r&eacute;seaux tombent, les entreprises ferment, les guerres coupent les c&acirc;bles. Ce qui survit, c'est ce qui a &eacute;t&eacute; copi&eacute;, partag&eacute;, dispers&eacute; entre mille mains. La meilleure protection d'une id&eacute;e, c'est qu'elle existe partout &agrave; la fois.">And we believe in resilience. Not out of fear, but out of wisdom. A civilization that stores all its knowledge in one place, behind a single door, is taking a great risk. Libraries burn, networks fall, companies close, wars cut the cables. What survives is what has been copied, shared, scattered across a thousand hands. The best protection for an idea is that it exists everywhere at once.</p>
+    <p data-en="So here is what we want: that no one is left without light when the grid goes out. That whoever wants to learn always can. That whoever knows something important can leave it to those who come after, in a form they will want to open. That our knowledge be no tenant of a cloud, but owner of itself." data-fr="Alors voil&agrave; ce que nous voulons : que personne ne se retrouve sans lumi&egrave;re quand la grille s'&eacute;teint. Que celui qui veut apprendre le puisse, toujours. Que celui qui sait quelque chose d'important puisse le laisser &agrave; ceux qui viennent apr&egrave;s lui, sous une forme qu'ils auront envie d'ouvrir. Que nos savoirs ne soient pas locataires d'un nuage, mais propri&eacute;taires d'eux-m&ecirc;mes.">So here is what we want: that no one is left without light when the grid goes out. That whoever wants to learn always can. That whoever knows something important can leave it to those who come after, in a form they will want to open. That our knowledge be no tenant of a cloud, but owner of itself.</p>
+    <p class="manifesto-line" data-en="Galaxtarus is not a game. It is a modest, portable, stubborn promise: as long as there remains a machine, a key, and a person to pass it on, <em>knowledge will not go out.</em>" data-fr="Galaxtarus n'est pas un jeu. C'est une promesse modeste, portable et obstin&eacute;e : tant qu'il reste une machine, une cl&eacute; et une personne pour la transmettre, <em>la connaissance ne s'&eacute;teindra pas.</em>">Galaxtarus is not a game. It is a modest, portable, stubborn promise: as long as there remains a machine, a key, and a person to pass it on, <em>knowledge will not go out.</em></p>
+    <p class="manifesto-end" data-en="That's all. And it is already a great deal." data-fr="C'est tout. Et c'est d&eacute;j&agrave; beaucoup.">That's all. And it is already a great deal.</p>
+    <p class="manifesto-sign">&mdash; Rapha&euml;l Maltais-Bourgault</p>
+  </section>
+</div>
+
+<!-- FOOTER -->
 <footer>
   <div class="pages">
-    <a href="index.html" data-en="Overview" data-fr="Accueil">Overview</a> ·
-    <a href="game.html" data-en="The Game" data-fr="Le Jeu">The Game</a> ·
-    <a href="engine.html" data-en="The Engine" data-fr="Le Moteur">The Engine</a> ·
-    <a href="tech.html" data-en="Tech" data-fr="Tech">Tech</a>
+    <a href="#" data-view="overview" data-en="Overview" data-fr="Accueil">Overview</a> &middot;
+    <a href="#" data-view="game"     data-en="The Game" data-fr="Le Jeu">The Game</a> &middot;
+    <a href="#" data-view="engine"   data-en="The Engine" data-fr="Le Moteur">The Engine</a> &middot;
+    <a href="#" data-view="tech"     data-en="Tech" data-fr="Tech">Tech</a> &middot;
+    <a href="#" data-view="survivable" data-en="Survivable" data-fr="Survivable">Survivable</a> &middot;
+    <a href="#" data-view="manifesto" data-en="Manifesto" data-fr="Manifeste">Manifesto</a>
   </div>
-  <div data-en="© 2026 Galaxtarus · Made on a USB stick · Written with an AI" data-fr="© 2026 Galaxtarus · Fabriqué sur une clé USB · Écrit avec une IA">© 2026 Galaxtarus · Made on a USB stick · Written with an AI</div>
+
+  <!-- CONTACT — liens temporaires (href="#"). Pas de formulaire : compatible file:// -->
+  <div class="contact">
+    <span class="contact-kicker" data-en="// GET IN TOUCH" data-fr="// CONTACT">// GET IN TOUCH</span>
+    <div class="contact-links">
+      <a class="contact-link" href="mailto:jackmaltais@outlook.com" title="Email" style="--c:var(--cyan)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 8 8 5.5L20 8"/></svg>
+        <span>Email</span>
+      </a>
+      <a class="contact-link" href="https://www.reddit.com/user/Cold-Satisfaction379/" target="_blank" rel="noopener" title="Reddit" style="--c:var(--magenta)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="14" r="6.5"/><circle cx="9.4" cy="13.5" r="1.05" fill="currentColor" stroke="none"/><circle cx="14.6" cy="13.5" r="1.05" fill="currentColor" stroke="none"/><path d="M12 7.5V4.2l3.4 1"/><circle cx="16" cy="5.3" r="1.1"/><path d="M9.5 16.4c1.5 1 3.5 1 5 0"/></svg>
+        <span>Reddit</span>
+      </a>
+      <a class="contact-link" href="https://discord.gg/tXhm76XFzF" target="_blank" rel="noopener" title="Discord" style="--c:var(--magenta-glow)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7.6c1.6-.8 3.2-1.1 5-1.1s3.4.3 5 1.1c1.6 2 2.4 4.4 2.3 7.3-1.3 1-2.7 1.7-4.2 2.1l-.9-1.6m-4.4 0-.9 1.6c-1.5-.4-2.9-1.1-4.2-2.1-.1-2.9.7-5.3 2.3-7.3"/><ellipse cx="9.5" cy="13" rx="1.1" ry="1.5" fill="currentColor" stroke="none"/><ellipse cx="14.5" cy="13" rx="1.1" ry="1.5" fill="currentColor" stroke="none"/></svg>
+        <span>Discord</span>
+      </a>
+      <a class="contact-link" href="#" title="Bientôt" style="--c:var(--cyan)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><path d="M14.5 8.2h-1.4c-1 0-1.6.6-1.6 1.6V11H14l-.4 2.6h-2.1V20"/></svg>
+        <span>Facebook</span>
+      </a>
+    </div>
+    <span class="contact-note" data-en="Channels go live at launch" data-fr="Canaux actifs au lancement">Channels go live at launch</span>
+  </div>
+
+  <div class="credit" data-en="Designed &amp; built by <span class='credit-name'>Rapha&euml;l Maltais-Bourgault</span>" data-fr="Con&ccedil;u &amp; d&eacute;velopp&eacute; par <span class='credit-name'>Rapha&euml;l Maltais-Bourgault</span>">Designed &amp; built by <span class="credit-name">Rapha&euml;l Maltais-Bourgault</span></div>
+  <div data-en="&copy; 2026 Galaxtarus &middot; Made on a USB stick &middot; Written with an AI" data-fr="&copy; 2026 Galaxtarus &middot; Fabriqué sur une clé USB &middot; Écrit avec une IA">&copy; 2026 Galaxtarus &middot; Made on a USB stick &middot; Written with an AI</div>
 </footer>
 
+<!-- Pager — navigation par points (section par section), pattern "full-page".
+     Les points sont générés en JS à partir de la vue active. -->
+<nav class="pager" aria-label="Section navigation" data-en-aria="Section navigation" data-fr-aria="Navigation par section"></nav>
+
+<!-- Moteur audio (AudioManager + MusicPlayer + thème, ~83 Ko) chargé à la
+     DEMANDE au premier clic sur MUSIC — injection dynamique dans music.js.
+     Évite ~83 Ko au chargement de la page pour les visiteurs qui n'écoutent
+     pas. Les fichiers moteur eux-mêmes ne sont pas modifiés. -->
+<script src="music.js"></script>
+<!-- Moteur de planète porté du jeu : rend les planètes depuis leur cfg EXACTE -->
+<script src="planet_engine/PlanetFx.js"></script>
+<script src="planet_engine/PlanetFxRegistry.js"></script>
+<script src="planet_engine/CrystalShards.js"></script>
+<script src="planet_engine/DebrisField.js"></script>
+<script src="planet_engine/DustCloud.js"></script>
+<script src="planet_engine/OrbitEllipse.js"></script>
+<script src="planet_engine/Blobs.js"></script>
+<script src="planet_engine/Crack.js"></script>
+<script src="planet_engine/Bioluminescence.js"></script>
+<script src="planet_engine/EnergyTendrils.js"></script>
+<script src="planet_engine/galaxtarus_planet_fx.js"></script>
+<script src="planet_engine/Planet.js"></script>
+<script src="nebula.js"></script>
 <script src="i18n.js"></script>
+<script>
+// ── Écran de boot rétro ───────────────────────────────────────────────────
+(function () {
+  var boot = document.getElementById('boot');
+  var log  = document.getElementById('boot-log');
+  if (!boot || !log) return;
+  function remove() { if (boot.parentNode) boot.parentNode.removeChild(boot); }
+
+  // Une seule fois par session ; jamais si l'utilisateur réduit les animations.
+  var seen = false;
+  try { seen = sessionStorage.getItem('gx-booted') === '1'; } catch (e) {}
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (seen || reduce) { remove(); return; }
+  try { sessionStorage.setItem('gx-booted', '1'); } catch (e) {}
+
+  document.body.style.overflow = 'hidden';
+
+  var _bootLang = 'en';
+  try { _bootLang = localStorage.getItem('galaxtarus-lang') || 'en'; } catch (e) {}
+  var LINES_FR = [
+    'GALAXTARUS BIOS  v2.6 .................. <span class="ok">OK</span>',
+    'Initialisation du systeme de fichiers .. <span class="ok">OK</span>',
+    'Recherche d\'un serveur ................. <span class="warn">AUCUN</span>',
+    'Montage des assets ..................... <span class="ok">OK</span>',
+    'Moteur : src/core ...................... <span class="ok">OK</span>',
+    'Audio : Web Audio API .................. <span class="ok">PRET</span>',
+    'Demarrage depuis la cle USB ............ <span class="ok">OK</span>',
+    '',
+    '<span class="ok">&gt; PRET.</span><span class="cursor"></span>'
+  ];
+  var LINES_EN = [
+    'GALAXTARUS BIOS  v2.6 .................. <span class="ok">OK</span>',
+    'Initializing file system ............... <span class="ok">OK</span>',
+    'Searching for a server ................. <span class="warn">NONE</span>',
+    'Mounting assets ........................ <span class="ok">OK</span>',
+    'Engine: src/core ....................... <span class="ok">OK</span>',
+    'Audio: Web Audio API ................... <span class="ok">READY</span>',
+    'Booting from USB stick ................. <span class="ok">OK</span>',
+    '',
+    '<span class="ok">&gt; READY.</span><span class="cursor"></span>'
+  ];
+  var LINES = _bootLang === 'fr' ? LINES_FR : LINES_EN;
+
+  var i = 0, done = false;
+  function finish() {
+    if (done) return; done = true;
+    log.innerHTML = LINES.join('\n');
+    setTimeout(function () {
+      boot.classList.add('done');
+      document.body.style.overflow = '';
+      setTimeout(remove, 650);
+    }, 450);
+  }
+  function step() {
+    if (i >= LINES.length) { finish(); return; }
+    log.innerHTML = LINES.slice(0, i + 1).join('\n');
+    i++;
+    setTimeout(step, LINES[i - 1] === '' ? 90 : 200);
+  }
+  boot.addEventListener('click', finish);
+  window.addEventListener('keydown', finish, { once: true });
+  setTimeout(step, 300);
+})();
+
+var PAGE_MAP   = { 'index.html':'overview','game.html':'game','engine.html':'engine','tech.html':'tech' };
+var VIEW_ORDER = ['overview','game','engine','tech','survivable','manifesto'];
+var _curView   = 'overview';
+
+// Restaure l'état « manifeste déjà lu » → badge + effet d'attention éteints.
+try { if (localStorage.getItem('galaxtarus-manifesto-read') === '1') document.body.classList.add('manifesto-read'); } catch (e) {}
+
+// ── Indicateur nav glissant ──────────────────────────────────────────────
+function updateNavIndicator(name) {
+  var ind  = document.getElementById('nav-indicator');
+  var link = document.querySelector('nav .center a[data-view="' + name + '"]');
+  if (!ind || !link) return;
+  var ctr  = document.querySelector('nav .center');
+  var cR   = ctr.getBoundingClientRect();
+  var lR   = link.getBoundingClientRect();
+  ind.style.left  = (lR.left - cR.left) + 'px';
+  ind.style.width = lR.width + 'px';
+}
+
+// ── Navigation avec transition directionnelle ─────────────────────────────
+function showView(name) {
+  var fromIdx = VIEW_ORDER.indexOf(_curView);
+  var toIdx   = VIEW_ORDER.indexOf(name);
+  var animClass = toIdx > fromIdx ? 'slide-from-right' : 'slide-from-left';
+
+  document.querySelectorAll('.view').forEach(function(v){
+    v.classList.remove('active','slide-from-right','slide-from-left');
+  });
+
+  var view = document.getElementById('view-' + name);
+  if (!view) return;
+  view.classList.add('active', animClass);
+  setTimeout(function(){ view.classList.remove('slide-from-right','slide-from-left'); }, 500);
+
+  // Hero entrance
+  var _hero = view.querySelector('.hero');
+  if (_hero) {
+    _hero.classList.remove('hero-animate');
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      _hero.classList.add('hero-animate');
+    }); });
+  }
+
+  _curView = name;
+  // Manifeste lu une fois → on éteint le badge et l'effet d'attention pour de bon.
+  if (name === 'manifesto') {
+    document.body.classList.add('manifesto-read');
+    try { localStorage.setItem('galaxtarus-manifesto-read', '1'); } catch (e) {}
+  }
+  window.scrollTo({ top:0, behavior:'instant' });
+
+  document.querySelectorAll('[data-view]').forEach(function(a){
+    a.classList.toggle('active', a.getAttribute('data-view') === name);
+  });
+  updateNavIndicator(name);
+
+  // Réarme les animations de contenu de la nouvelle vue : elles se rejoueront
+  // à chaque passage au scroll, avec des variantes différentes.
+  rvPrepView(view);
+}
+
+// ── Event delegation liens ────────────────────────────────────────────────
+document.addEventListener('click', function(e) {
+  var a = e.target.closest('a[data-view], a[href]');
+  if (!a) return;
+  var dv = a.getAttribute('data-view');
+  if (dv) { e.preventDefault(); showView(dv); return; }
+  var href  = a.getAttribute('href') || '';
+  var parts = href.split('#'); var page = parts[0]; var anchor = parts[1];
+  if (PAGE_MAP[page]) {
+    e.preventDefault(); showView(PAGE_MAP[page]);
+    if (anchor) setTimeout(function(){ var el=document.getElementById(anchor); if(el) el.scrollIntoView({behavior:'smooth'}); }, 60);
+  }
+});
+
+// ── Moteur de révélation au scroll ────────────────────────────────────────
+// Se REJOUE à chaque passage d'un élément dans l'écran (pas qu'une seule fois),
+// avec une variante d'animation tirée au hasard à chaque fois → ça surprend, et
+// ~1 fois sur 3 c'est une variante "plus marquée". Tout est transform/opacity/
+// filter/clip : la place de chaque élément reste réservée (aucun reflow), il
+// apparaît en fondu pendant qu'il bouge → pas de chevauchement franc.
+var RV_VARIANTS = ['rv-up','rv-down','rv-left','rv-right','rv-zoom','rv-blur','rv-rot','rv-wipe','rv-flip'];
+var RV_BOLD     = ['rv-rise','rv-zoombig','rv-flip','rv-rot'];
+var RV_ALL      = RV_VARIANTS.concat(RV_BOLD);
+var RV_SEL = '.kicker,.pkicker,h1,h2,h3,.pill,.tag,.ptitle,.pdesc,.parrow,' +
+  'p.lead,p:not(.lead):not(.sig),li,blockquote,pre,.imgph,figure,table.spec,' +
+  '.tier,.cta,.sig,.pullquote span';
+
+function rvPick() {
+  var pool = Math.random() < 0.33 ? RV_BOLD : RV_VARIANTS;   // parfois "plus d'animation"
+  return pool[(Math.random() * pool.length) | 0];
+}
+function rvArm(el) {                  // (ré)arme : état caché + variante fraîche
+  for (var i = 0; i < RV_ALL.length; i++) el.classList.remove(RV_ALL[i]);
+  el.classList.add('rv', rvPick());
+  el.classList.remove('in');
+}
+
+var rvObs = new IntersectionObserver(function (entries) {
+  entries.forEach(function (e) {
+    var el = e.target;
+    if (e.isIntersecting) {
+      el.style.transitionDelay = (Math.random() * 0.14).toFixed(3) + 's';   // rythme varié
+      el.classList.add('in');
+    } else {
+      // Sorti de l'écran → on réarme (instantanément, invisible) avec une
+      // NOUVELLE variante pour que le prochain passage soit différent.
+      el.classList.add('rv-noanim');
+      el.style.transitionDelay = '';
+      rvArm(el);
+      void el.offsetWidth;           // reflow : applique l'état caché sans transition
+      el.classList.remove('rv-noanim');
+    }
+  });
+}, { threshold: 0 });   // seuil 0 : révèle dès qu'un pixel entre, ne re-cache QUE hors écran → jamais d'élément visible caché
+
+function rvPrepView(view) {
+  if (!view) return;
+  Array.prototype.forEach.call(view.querySelectorAll(RV_SEL), function (el) {
+    if (el.closest('.hero')) return;   // la hero garde son entrée dédiée (.hero-animate)
+    rvArm(el);
+    rvObs.observe(el);
+  });
+}
+
+// Init au chargement : armer la vue overview + indicateur nav + entrée hero.
+(function () {
+  rvPrepView(document.getElementById('view-overview'));
+  setTimeout(updateNavIndicator.bind(null, 'overview'), 80);
+  var firstHero = document.querySelector('#view-overview .hero');
+  if (firstHero) {
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      firstHero.classList.add('hero-animate');
+    }); });
+  }
+})();
+
+// ── 3D card tilt ──────────────────────────────────────────────────────────
+document.querySelectorAll('.path').forEach(function(card) {
+  card.addEventListener('mousemove', function(e) {
+    var r = card.getBoundingClientRect();
+    var x = (e.clientX - r.left) / r.width  - 0.5;
+    var y = (e.clientY - r.top)  / r.height - 0.5;
+    card.style.transform = 'perspective(700px) rotateY(' + (x * 14) + 'deg) rotateX(' + (-y * 9) + 'deg) translateY(-5px) scale(1.02)';
+  });
+  card.addEventListener('mouseleave', function() {
+    card.style.transform = '';
+  });
+});
+
+// ── Music button pulse ────────────────────────────────────────────────────
+(function() {
+  var orig = window.toggleMusic;
+  window.toggleMusic = function() {
+    if (orig) orig();
+    setTimeout(function() {
+      var btn = document.getElementById('btn-music');
+      if (btn) btn.classList.toggle('playing', !!window._musicPlaying);
+    }, 60);
+  };
+})();
+
+// ── Pager : navigation section par section (points cliquables + clavier) ───
+// Pattern "full-page" classique (façon fullPage.js / pages produit) : une
+// colonne de points, un par bloc de texte de la vue active. Le point actif
+// suit le scroll ; cliquer un point y saute ; survol = libellé de la section.
+(function () {
+  var pager = document.querySelector('.pager');
+  function navH() { var n = document.querySelector('nav.top'); return n ? n.getBoundingClientRect().height : 0; }
+  function topOf(el) { return el.getBoundingClientRect().top + window.pageYOffset; }
+  function activeView() { return document.querySelector('.view.active'); }
+  function steps() {
+    var view = activeView(); if (!view) return [];
+    var list = Array.prototype.slice.call(view.querySelectorAll('section, .paths, .pullquote'));
+    list.sort(function (a, b) { return topOf(a) - topOf(b); });
+    return list;
+  }
+  function labelFor(el) {
+    var h = el.querySelector('h1, h2, .ptitle');
+    var k = el.querySelector('.kicker, .pkicker');
+    var txt = ((h && h.textContent) || (k && k.textContent) || '').replace(/\s+/g, ' ').trim();
+    if (txt.length > 32) txt = txt.slice(0, 30) + '…';
+    return txt || '•';
+  }
+  var _list = [], _builtFor = null;
+  function build() {
+    if (!pager) return;
+    _builtFor = activeView();
+    _list = steps();
+    pager.innerHTML = '';
+    _list.forEach(function (el, i) {
+      var dot = document.createElement('button');
+      dot.className = 'pager-dot'; dot.type = 'button';
+      dot.setAttribute('aria-label', labelFor(el));
+      var lab = document.createElement('span');
+      lab.className = 'pager-label'; lab.textContent = labelFor(el);
+      dot.appendChild(lab);
+      dot.addEventListener('click', function (e) { e.preventDefault(); goToIndex(i); });
+      pager.appendChild(dot);
+    });
+  }
+  function currentIndex() {
+    var y = window.pageYOffset + navH() + 12, idx = 0;
+    for (var i = 0; i < _list.length; i++) if (topOf(_list[i]) <= y) idx = i;
+    return idx;
+  }
+  function goToIndex(i) {
+    if (!_list.length) return;
+    i = Math.max(0, Math.min(_list.length - 1, i));
+    window.scrollTo({ top: Math.max(0, topOf(_list[i]) - navH() - 4), behavior: 'smooth' });
+  }
+  function markActive() {
+    if (activeView() !== _builtFor) build();      // vue changée → reconstruire
+    var ci = currentIndex(), dots = pager ? pager.children : [];
+    for (var i = 0; i < dots.length; i++) dots[i].classList.toggle('active', i === ci);
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(function () { markActive(); ticking = false; });
+  }, { passive: true });
+  window.addEventListener('resize', function () { build(); markActive(); }, { passive: true });
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-view], a[href]')) setTimeout(function () { build(); markActive(); }, 80);
+  });
+  document.addEventListener('keydown', function (e) {
+    var tag = (e.target && e.target.tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || e.metaKey || e.ctrlKey) return;
+    if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); goToIndex(currentIndex() + 1); }
+    else if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); goToIndex(currentIndex() - 1); }
+  });
+  build(); markActive();
+  setTimeout(function () { build(); markActive(); }, 300);
+})();
+
+// ── Graphique à barres d'exemple (SVG vanilla, animé à l'apparition) ───────
+(function () {
+  var host = document.getElementById('demo-chart');
+  if (!host) return;
+
+  // ↓ DONNÉES D'EXEMPLE — remplace librement (label court + valeur 0 → MAX). ↓
+  var DATA = [
+    { label: 'A', value: 42 },
+    { label: 'B', value: 68 },
+    { label: 'C', value: 55 },
+    { label: 'D', value: 83 },
+    { label: 'E', value: 61 }
+  ];
+  var MAX = 100;   // haut de l'échelle
+  var STEPS = 4;   // intervalles de l'échelle (→ STEPS+1 graduations)
+
+  var Wv = 620, L = 54, R = 596, T = 24, B = 288;
+  var plotW = R - L, plotH = B - T;
+  function yv(v) { return B - (v / MAX) * plotH; }
+
+  var s = '<svg viewBox="0 0 ' + Wv + ' 340" role="img" aria-label="Example bar chart">';
+  s += '<defs><linearGradient id="gxBar" x1="0" y1="1" x2="0" y2="0">' +
+       '<stop offset="0" stop-color="#4dffee"/><stop offset="1" stop-color="#ff4dd6"/>' +
+       '</linearGradient></defs>';
+
+  for (var g = 0; g <= STEPS; g++) {
+    var gv = MAX * g / STEPS, gy = yv(gv);
+    s += '<line class="grid" x1="' + L + '" y1="' + gy + '" x2="' + R + '" y2="' + gy + '"/>';
+    s += '<text class="ylab" x="' + (L - 10) + '" y="' + (gy + 4) + '" text-anchor="end">' + Math.round(gv) + '</text>';
+  }
+  s += '<line class="axis" x1="' + L + '" y1="' + B + '" x2="' + R + '" y2="' + B + '"/>';
+
+  var slotW = plotW / DATA.length, barW = slotW * 0.5;
+  DATA.forEach(function (d, i) {
+    var cx = L + (i + 0.5) * slotW;
+    var bx = cx - barW / 2, by = yv(d.value), bh = B - by;
+    var delay = 0.08 + i * 0.12;
+    s += '<rect class="bar" x="' + bx.toFixed(1) + '" y="' + by.toFixed(1) + '" width="' + barW.toFixed(1) +
+         '" height="' + bh.toFixed(1) + '" rx="3" fill="url(#gxBar)" style="transition-delay:' + delay.toFixed(2) + 's"/>';
+    s += '<text class="bar-val" x="' + cx.toFixed(1) + '" y="' + (by - 10).toFixed(1) +
+         '" text-anchor="middle" style="transition-delay:' + (delay + 0.55).toFixed(2) + 's">' + d.value + '</text>';
+    s += '<text class="xlab" x="' + cx.toFixed(1) + '" y="' + (B + 24) + '" text-anchor="middle">' + d.label + '</text>';
+  });
+  s += '</svg>';
+  host.innerHTML = s;
+
+  // (Ré)anime à chaque entrée du graphique dans l'écran.
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { host.classList.toggle('in', e.isIntersecting); });
+  }, { threshold: 0.3 });
+  io.observe(host);
+})();
+
+// ── Graphique orbital : 30 usages en 6 familles (SVG vanilla, animé) ──────
+// Rayons dont la longueur ∝ au nombre d'usages de la famille. Croissance au
+// scroll (IntersectionObserver → classe .in). Libellés data-en/data-fr : repris
+// par i18n.js (setLang échange l'innerHTML), donc ils suivent la langue.
+(function () {
+  var host = document.getElementById('engine-orbit');
+  if (!host) return;
+
+  var FAM = [
+    { en: 'Education & science',   fr: 'Éducation & sciences',   n: 7, col: '#4dffee' },
+    { en: 'Training & procedures', fr: 'Formation & procédures', n: 5, col: '#ff4dd6' },
+    { en: 'Creation & media',      fr: 'Création & médias',      n: 4, col: '#7c5cff' },
+    { en: 'Tools & prototyping',   fr: 'Outils & prototypage',   n: 4, col: '#ffd24d' },
+    { en: 'Heritage & autonomy',   fr: 'Patrimoine & autonomie', n: 5, col: '#4d9fff' },
+    { en: 'Story, culture & care', fr: 'Récit, culture & soin',  n: 5, col: '#ff7d5c' }
+  ];
+
+  var cx = 320, cy = 240, hub = 30, maxN = 7, minR = 66, span = 150;
+  function f1(v) { return Math.round(v * 10) / 10; }
+
+  var s = '<svg viewBox="0 0 640 480" role="img" aria-label="30 uses across 6 families">';
+  s += '<defs>';
+  FAM.forEach(function (f, i) {
+    s += '<radialGradient id="ngrad' + i + '"><stop offset="0" stop-color="' + f.col +
+         '" stop-opacity="0.6"/><stop offset="1" stop-color="' + f.col + '" stop-opacity="0"/></radialGradient>';
+  });
+  s += '</defs>';
+
+  [2, 4, 6].forEach(function (c) {
+    var rr = minR + (c / maxN) * span;
+    s += '<circle class="orbit-ring" cx="' + cx + '" cy="' + cy + '" r="' + f1(rr) + '"/>';
+  });
+
+  FAM.forEach(function (f, i) {
+    var ang = (-90 + i * 60) * Math.PI / 180;
+    var ca = Math.cos(ang), sa = Math.sin(ang);
+    var len = minR + (f.n / maxN) * span;
+    var x0 = cx + ca * (hub - 2), y0 = cy + sa * (hub - 2);
+    var x1 = cx + ca * len,       y1 = cy + sa * len;
+    var rayLen = Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0));
+    var d1 = (0.15 + i * 0.12).toFixed(2);
+    var d2 = (0.15 + i * 0.12 + 0.5).toFixed(2);
+    var nr = 8 + f.n * 1.7;
+
+    s += '<line class="orbit-ray" x1="' + f1(x0) + '" y1="' + f1(y0) + '" x2="' + f1(x1) + '" y2="' + f1(y1) +
+         '" stroke="' + f.col + '" stroke-dasharray="' + f1(rayLen) + '" stroke-dashoffset="' + f1(rayLen) +
+         '" style="transition-delay:' + d1 + 's"/>';
+    s += '<circle class="orbit-glow" cx="' + f1(x1) + '" cy="' + f1(y1) + '" r="' + f1(nr * 2.2) +
+         '" fill="url(#ngrad' + i + ')" style="transition-delay:' + d2 + 's"/>';
+    s += '<circle class="orbit-node" cx="' + f1(x1) + '" cy="' + f1(y1) + '" r="' + f1(nr) +
+         '" fill="#06060f" stroke="' + f.col + '" style="transition-delay:' + d2 + 's"/>';
+    s += '<text class="orbit-cnt" x="' + f1(x1) + '" y="' + f1(y1 + 5) + '" text-anchor="middle" fill="' + f.col +
+         '" style="transition-delay:' + (0.15 + i * 0.12 + 0.6).toFixed(2) + 's">' + f.n + '</text>';
+
+    var anchor = ca > 0.3 ? 'start' : (ca < -0.3 ? 'end' : 'middle');
+    var lx = cx + ca * (len + nr + 12);
+    var ly = cy + sa * (len + nr + 12);
+    if (anchor === 'middle') ly += (sa < 0 ? -10 : 18);
+    s += '<text class="orbit-lbl" x="' + f1(lx) + '" y="' + f1(ly) + '" text-anchor="' + anchor +
+         '" data-en="' + f.en + '" data-fr="' + f.fr + '" style="transition-delay:' +
+         (0.15 + i * 0.12 + 0.55).toFixed(2) + 's">' + f.en + '</text>';
+  });
+
+  s += '<circle class="orbit-hub-glow" cx="' + cx + '" cy="' + cy + '" r="' + (hub * 1.9) + '"/>';
+  s += '<circle class="orbit-hub" cx="' + cx + '" cy="' + cy + '" r="' + hub + '"/>';
+  s += '<text class="orbit-hub-n" x="' + cx + '" y="' + (cy - 1) + '" text-anchor="middle">30</text>';
+  s += '<text class="orbit-hub-l" x="' + cx + '" y="' + (cy + 15) + '" text-anchor="middle" data-en="uses" data-fr="usages">uses</text>';
+  s += '</svg>';
+  host.innerHTML = s;
+
+  try { if (typeof setLang === 'function') setLang(document.documentElement.lang || 'en'); } catch (e) {}
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { host.classList.toggle('in', e.isIntersecting); });
+  }, { threshold: 0.25 });
+  io.observe(host);
+})();
+
+// ── SURVIVABLE — Donut des familles (SVG vanilla, animé au scroll) ────────
+(function () {
+  var host = document.getElementById('surv-donut');
+  if (!host) return;
+  var FAM = [
+    { en: 'Education & science',   fr: 'Éducation & sciences',   n: 7, col: '#4dffee' },
+    { en: 'Training & procedures', fr: 'Formation & procédures', n: 5, col: '#ff4dd6' },
+    { en: 'Creation & media',      fr: 'Création & médias',      n: 4, col: '#7c5cff' },
+    { en: 'Tools & prototyping',   fr: 'Outils & prototypage',   n: 4, col: '#ffd24d' },
+    { en: 'Heritage & autonomy',   fr: 'Patrimoine & autonomie', n: 5, col: '#4d9fff' },
+    { en: 'Story, culture & care', fr: 'Récit, culture & soin',  n: 5, col: '#ff7d5c' }
+  ];
+  var total = 30, R = 92, C = 2 * Math.PI * R, start = -90;
+  var s = '<svg viewBox="0 0 260 260" class="donut-svg" role="img" aria-label="Uses by family">';
+  s += '<circle cx="130" cy="130" r="92" fill="none" stroke="rgba(120,150,210,0.12)" stroke-width="30"/>';
+  FAM.forEach(function (f, i) {
+    var p = f.n / total, seg = p * C - 2.5; if (seg < 0) seg = p * C;
+    s += '<circle class="donut-seg" cx="130" cy="130" r="92" fill="none" stroke="' + f.col +
+         '" stroke-width="30" stroke-dasharray="' + seg.toFixed(2) + ' ' + (C - seg).toFixed(2) +
+         '" stroke-dashoffset="' + seg.toFixed(2) + '" transform="rotate(' + start.toFixed(2) +
+         ' 130 130)" style="transition-delay:' + (0.1 + i * 0.12).toFixed(2) + 's"/>';
+    start += p * 360;
+  });
+  s += '<text class="donut-total" x="130" y="125" text-anchor="middle">30</text>';
+  s += '<text class="donut-total-l" x="130" y="147" text-anchor="middle" data-en="uses" data-fr="usages">uses</text>';
+  s += '</svg>';
+  var lg = '<div class="donut-legend">';
+  FAM.forEach(function (f) {
+    var pct = Math.round(f.n / total * 100);
+    lg += '<div class="dl-item"><span class="dl-dot" style="background:' + f.col + '"></span>' +
+          '<span class="dl-name" data-en="' + f.en + '" data-fr="' + f.fr + '">' + f.en + '</span>' +
+          '<span class="dl-val">' + f.n + ' &middot; ' + pct + '%</span></div>';
+  });
+  lg += '</div>';
+  host.innerHTML = s + lg;
+  try { if (typeof setLang === 'function') setLang(document.documentElement.lang || 'en'); } catch (e) {}
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { host.classList.toggle('in', e.isIntersecting); });
+  }, { threshold: 0.25 });
+  io.observe(host);
+})();
+
+// ── SURVIVABLE — Barres horizontales par famille (HTML, animé au scroll) ───
+(function () {
+  var host = document.getElementById('surv-hbars');
+  if (!host) return;
+  var FAM = [
+    { en: 'Education & science',   fr: 'Éducation & sciences',   n: 7, col: '#4dffee' },
+    { en: 'Training & procedures', fr: 'Formation & procédures', n: 5, col: '#ff4dd6' },
+    { en: 'Heritage & autonomy',   fr: 'Patrimoine & autonomie', n: 5, col: '#4d9fff' },
+    { en: 'Story, culture & care', fr: 'Récit, culture & soin',  n: 5, col: '#ff7d5c' },
+    { en: 'Creation & media',      fr: 'Création & médias',      n: 4, col: '#7c5cff' },
+    { en: 'Tools & prototyping',   fr: 'Outils & prototypage',   n: 4, col: '#ffd24d' }
+  ];
+  var max = 7, h = '';
+  FAM.forEach(function (f, i) {
+    var w = Math.round(f.n / max * 100);
+    h += '<div class="hbar-row">' +
+         '<span class="hbar-label" data-en="' + f.en + '" data-fr="' + f.fr + '">' + f.en + '</span>' +
+         '<span class="hbar-track"><span class="hbar-fill" style="--w:' + w + '%;background:' + f.col +
+         ';transition-delay:' + (0.1 + i * 0.1).toFixed(2) + 's"></span></span>' +
+         '<span class="hbar-n">' + f.n + '</span></div>';
+  });
+  host.innerHTML = h;
+  try { if (typeof setLang === 'function') setLang(document.documentElement.lang || 'en'); } catch (e) {}
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { host.classList.toggle('in', e.isIntersecting); });
+  }, { threshold: 0.2 });
+  io.observe(host);
+})();
+
+// ── SURVIVABLE — Radar des capacités (SVG vanilla, Galaxtarus vs classique) ─
+(function () {
+  var host = document.getElementById('surv-radar');
+  if (!host) return;
+  var AX = [
+    { en: 'Zero deps',     fr: 'Zéro dépend.' },
+    { en: 'Offline',       fr: 'Hors-ligne' },
+    { en: 'Longevity',     fr: 'Longévité' },
+    { en: 'Readable code', fr: 'Code lisible' },
+    { en: 'i18n',          fr: 'i18n' },
+    { en: 'Visual editors',fr: 'Éditeurs visuels' }
+  ];
+  var GA = [10, 10, 10, 9, 9, 8], TY = [3, 2, 4, 3, 6, 9];
+  var cx = 170, cy = 162, R = 116, N = 6, maxV = 10;
+  function pt(i, v) { var a = (-90 + i * 60) * Math.PI / 180, r = v / maxV * R; return [cx + Math.cos(a) * r, cy + Math.sin(a) * r]; }
+  var s = '<svg viewBox="0 0 340 320" class="radar-svg" role="img" aria-label="Capabilities radar">';
+  [0.25, 0.5, 0.75, 1].forEach(function (g) {
+    var pts = ''; for (var i = 0; i < N; i++) { var p = pt(i, maxV * g); pts += p[0].toFixed(1) + ',' + p[1].toFixed(1) + ' '; }
+    s += '<polygon class="radar-ring" points="' + pts.trim() + '"/>';
+  });
+  for (var i = 0; i < N; i++) {
+    var p = pt(i, maxV); s += '<line class="radar-axis" x1="' + cx + '" y1="' + cy + '" x2="' + p[0].toFixed(1) + '" y2="' + p[1].toFixed(1) + '"/>';
+    var lp = pt(i, maxV * 1.16), ca = Math.cos((-90 + i * 60) * Math.PI / 180);
+    var anc = ca > 0.3 ? 'start' : (ca < -0.3 ? 'end' : 'middle');
+    s += '<text class="radar-lbl" x="' + lp[0].toFixed(1) + '" y="' + (lp[1] + 3).toFixed(1) + '" text-anchor="' + anc +
+         '" data-en="' + AX[i].en + '" data-fr="' + AX[i].fr + '">' + AX[i].en + '</text>';
+  }
+  function poly(vals, cls, delay) {
+    var pts = ''; for (var i = 0; i < N; i++) { var p = pt(i, vals[i]); pts += p[0].toFixed(1) + ',' + p[1].toFixed(1) + ' '; }
+    return '<polygon class="' + cls + '" points="' + pts.trim() + '" style="transition-delay:' + delay + 's"/>';
+  }
+  s += poly(TY, 'radar-poly-b', '0.15');
+  s += poly(GA, 'radar-poly-a', '0.35');
+  s += '</svg>';
+  host.innerHTML = s;
+  try { if (typeof setLang === 'function') setLang(document.documentElement.lang || 'en'); } catch (e) {}
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { host.classList.toggle('in', e.isIntersecting); });
+  }, { threshold: 0.25 });
+  io.observe(host);
+})();
+
+// ── SURVIVABLE — Matrice comparative : révèle ses cellules au scroll ───────
+(function () {
+  var host = document.querySelector('#view-survivable .compare-matrix');
+  if (!host) return;
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { host.classList.toggle('in', e.isIntersecting); });
+  }, { threshold: 0.15 });
+  io.observe(host);
+})();
+
+// ── Menu mobile (hamburger) ───────────────────────────────────────────────
+(function () {
+  var burger = document.getElementById('nav-burger');
+  var menu   = document.getElementById('mobile-menu');
+  if (!burger || !menu) return;
+  function setOpen(o) {
+    menu.classList.toggle('open', o);
+    burger.classList.toggle('open', o);
+    burger.setAttribute('aria-expanded', o ? 'true' : 'false');
+    document.body.style.overflow = o ? 'hidden' : '';
+  }
+  burger.addEventListener('click', function () { setOpen(!menu.classList.contains('open')); });
+  // Choisir un onglet ferme le menu (la navigation est gérée ailleurs via data-view).
+  menu.addEventListener('click', function (e) {
+    if (e.target.closest('a[data-view]')) setOpen(false);
+  });
+  // Repasser en desktop referme proprement (évite un body bloqué).
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 820) setOpen(false);
+  }, { passive: true });
+})();
+
+// ── Grain : pulse lent aléatoire, et monte vers 60% quand la page est inactive ─
+(function () {
+  var grain = document.querySelector('.grain');
+  if (!grain) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) { grain.style.opacity = '0.13'; return; }
+
+  var IDLE_MS = 22000;          // délai sans interaction avant la montée (assez long pour ne pas gêner la lecture)
+  var idle = false, idleTimer = null;
+  function rnd(a, b) { return (a + Math.random() * (b - a)).toFixed(3); }
+
+  // Pulse lent : nouvelle opacité 10–20% à intervalle aléatoire (lissé par la transition CSS).
+  (function pulse() {
+    if (!idle) grain.style.opacity = rnd(0.10, 0.20);
+    setTimeout(pulse, 3500 + Math.random() * 3500);
+  })();
+
+  function goIdle() { idle = true; grain.style.opacity = '0.6'; }   // montée douce (transition CSS)
+  function activity() {
+    if (idle) { idle = false; grain.style.opacity = rnd(0.10, 0.20); }
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(goIdle, IDLE_MS);
+  }
+  ['mousemove', 'mousedown', 'scroll', 'keydown', 'touchstart', 'wheel'].forEach(function (ev) {
+    window.addEventListener(ev, activity, { passive: true });
+  });
+  idleTimer = setTimeout(goIdle, IDLE_MS);
+})();
+
+// ── L.O.S. : l'IA pointe le museau et lâche un message aléatoire ───────────
+(function () {
+  var root = document.getElementById('los');
+  var bot = document.getElementById('los-bot');
+  var bubble = document.getElementById('los-bubble');
+  if (!root || !bot || !bubble) return;
+
+  var SVG = '<svg viewBox="0 0 100 100"><line x1="40" y1="15" x2="35" y2="3" stroke="#4dffee" stroke-width="1.8"/><line x1="60" y1="15" x2="65" y2="3" stroke="#4dffee" stroke-width="1.8"/><circle cx="35" cy="3" r="2" fill="#4dffee"/><circle cx="65" cy="3" r="2" fill="#4dffee"/><rect x="22" y="18" width="56" height="60" rx="6" fill="#dde8ee" stroke="#4dffee" stroke-width="1.5"/><rect x="40" y="78" width="20" height="6" rx="1" fill="#aab8be"/>';
+  var FACES = {
+    neutral: SVG + '<rect x="32" y="35" width="36" height="14" rx="2" fill="#0a1a2e"/><circle cx="42" cy="42" r="2.5" fill="#4dffee"/><circle cx="58" cy="42" r="2.5" fill="#4dffee"/><line x1="42" y1="62" x2="58" y2="62" stroke="#0a1a2e" stroke-width="2.2" stroke-linecap="round"/></svg>',
+    amused:  SVG + '<rect x="32" y="35" width="36" height="14" rx="2" fill="#0a1a2e"/><path d="M 38 44 Q 42 39 46 44" stroke="#4dffee" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M 54 44 Q 58 39 62 44" stroke="#4dffee" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M 42 63 Q 50 67 58 60" stroke="#0a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+    glitch:  SVG + '<rect x="32" y="35" width="34" height="7" rx="2" fill="#0a1a2e"/><rect x="34" y="42" width="34" height="7" rx="2" fill="#0a1a2e"/><circle cx="40" cy="40" r="2.5" fill="#4dffee"/><circle cx="60" cy="44" r="2.5" fill="#4dffee" opacity="0.7"/><path d="M 42 62 L 46 60 L 50 63 L 54 60 L 58 62" stroke="#0a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/><line x1="18" y1="68" x2="20" y2="68" stroke="#ff4d9d" stroke-width="1"/></svg>'
+  };
+
+  // [ texte FR, texte EN, expression ] — la bulle suit la langue du menu.
+  var MESSAGES = [
+    ["Tu n'étais pas censé être seul. Mais bon. Me voilà.", "You weren't meant to be alone. Oh well. Here I am.", 'neutral'],
+    ["Le vaisseau est magenta vif. Très discret, oui.", "The shuttle is bright magenta. Very stealthy, yes.", 'amused'],
+    ["Aucune arme à bord. Notre plan : fuir, vite.", "No weapons aboard. The plan: flee, fast.", 'neutral'],
+    ["J'étais jardinier. Maintenant je commente des astéroïdes.", "I was a gardener. Now I narrate asteroids.", 'amused'],
+    ["Surchauffe moteur dans 3… 2… je plaisante. J'espère.", "Engine overheat in 3… 2… kidding. I hope.", 'glitch'],
+    ["Seize chapitres. Je les ai comptés. Deux fois.", "Sixteen chapters. I counted them. Twice.", 'neutral'],
+    ["HAVOC garde la sortie. Six pattes, un œil. On l'évite.", "HAVOC guards the exit. Six legs, one eye. We avoid it.", 'neutral'],
+    ["Chaque module ici appartenait à quelqu'un. Avant. Bref.", "Every module here belonged to someone. Before. Anyway.", 'neutral'],
+    ["Pas de serveur, pas de cloud. Juste toi, moi, une clé USB.", "No server, no cloud. Just you, me, a USB stick.", 'amused'],
+    ["Tout ce que je dis a été écrit par une vraie IA. Sur la boîte.", "Everything I say was written by a real AI. It's on the box.", 'glitch'],
+    ["Je gli—glitche un peu. Ça pa—passe. Normalement.", "I gli—glitch a bit. It pa—passes. Usually.", 'glitch'],
+    ["Tu peux me cliquer dessus. J'aime l'attention.", "You can click me. I like the attention.", 'amused']
+  ];
+
+  bot.innerHTML = FACES.neutral;
+  var hideTimer, nextTimer, last = -1;
+
+  function say() {
+    var i;
+    do { i = Math.floor(Math.random() * MESSAGES.length); } while (i === last && MESSAGES.length > 1);
+    last = i;
+    var m = MESSAGES[i];
+    var lang = (document.documentElement.lang === 'fr') ? 'fr' : 'en';
+    bot.innerHTML = FACES[m[2]] || FACES.neutral;
+    bubble.innerHTML = '<span class="los-name">L.O.S. &gt;</span> <span data-fr="' + m[0] + '" data-en="' + m[1] + '">' + (lang === 'fr' ? m[0] : m[1]) + '</span>';
+    root.classList.add('show');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(hide, 5500);
+  }
+  function hide() {
+    root.classList.remove('show');
+    clearTimeout(nextTimer);
+    nextTimer = setTimeout(say, 12000 + Math.random() * 13000);   // revient au bout de 12-25 s
+  }
+  bot.addEventListener('click', function () { clearTimeout(hideTimer); say(); });
+
+  setTimeout(say, 4500);   // première apparition après le boot
+})();
+
+// ── Capture email (fenêtre « Prévenez-moi du lancement ») ──────────────────
+(function () {
+  // ════════════════════════════════════════════════════════════════════════
+  //  POUR BRANCHER LA COLLECTE (plus tard) :
+  //   1. Crée un compte + un formulaire sur Kit (kit.com) ou EmailOctopus
+  //      (emailoctopus.com), tous deux gratuits.
+  //   2. Colle l'URL d'action du formulaire dans NOTIFY_ENDPOINT ci-dessous.
+  //   3. Vérifie le nom du champ email attendu par le service et, si besoin,
+  //      renomme l'input #notify-email dans le HTML :
+  //        • Kit          → name="email_address"   (déjà en place)
+  //        • EmailOctopus → name="field_0" (ou celui indiqué dans ton embed)
+  //  Tant que NOTIFY_ENDPOINT est vide → mode démo : le formulaire valide
+  //  l'email et affiche « merci », sans rien envoyer.
+  // ════════════════════════════════════════════════════════════════════════
+  var NOTIFY_ENDPOINT = 'https://app.kit.com/forms/9534723/subscriptions';   // Kit — formulaire 9534723
+
+  var modal = document.getElementById('notify');
+  var form  = document.getElementById('notify-form');
+  var email = document.getElementById('notify-email');
+  var msg   = document.getElementById('notify-msg');
+  var closeBtn = document.getElementById('notify-close');
+  if (!modal || !form) return;
+
+  function openModal()  { modal.classList.add('open'); setTimeout(function () { email.focus(); }, 120); }
+  function closeModal() { modal.classList.remove('open'); }
+  function setMsg(text, ok) { msg.textContent = text; msg.className = 'notify-msg ' + (ok ? 'ok' : 'err'); }
+
+  function toggleModal() {
+    if (modal.classList.contains('open')) closeModal();
+    else { msg.textContent = ''; msg.className = 'notify-msg'; openModal(); }
+  }
+  document.addEventListener('click', function (e) {
+    var trig = e.target.closest('[data-notify], #notify-trigger');
+    if (trig) {
+      e.preventDefault();
+      if (trig.id === 'notify-trigger') toggleModal();
+      else { msg.textContent = ''; msg.className = 'notify-msg'; openModal(); }
+      return;
+    }
+    // Clic en dehors du popover → fermeture.
+    if (modal.classList.contains('open') && !e.target.closest('#notify')) closeModal();
+  });
+  closeBtn.addEventListener('click', closeModal);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var fr = (document.documentElement.lang === 'fr');   // messages dans la langue active
+    var v = (email.value || '').trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+      setMsg(fr ? 'Adresse email invalide.' : 'Invalid email address.', false); email.focus(); return;
+    }
+    if (!NOTIFY_ENDPOINT) {                       // mode démo : pas encore branché
+      setMsg(fr ? 'Merci ! Tu seras prévenu au lancement.' : "Thanks! You'll be notified at launch.", true);
+      form.reset();
+      return;
+    }
+    setMsg(fr ? 'Envoi…' : 'Sending…', true);
+    fetch(NOTIFY_ENDPOINT, { method: 'POST', body: new FormData(form), mode: 'no-cors' })
+      .then(function () {
+        setMsg(fr ? 'Merci ! Vérifie ta boîte mail pour confirmer ton inscription.'
+                  : 'Thanks! Check your inbox to confirm your subscription.', true);
+        form.reset();
+      })
+      .catch(function () {
+        setMsg(fr ? 'Oups, réessaie dans un instant.' : 'Oops, try again in a moment.', false);
+      });
+  });
+})();
+
+// ── Barre sociale : ressort subtil qui suit le scroll (léger retard + bounce) ─
+(function () {
+  var bar = document.getElementById('social');
+  if (!bar) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;   // pas de ressort si l'utilisateur réduit les animations
+
+  var prev = window.pageYOffset || 0;
+  var offset = 0, vel = 0, running = false;
+  var STIFF = 0.09, DAMP = 0.80, PUSH = 0.14, MAXOFF = 30;   // réglé "subtil"
+
+  function tick() {
+    vel += -offset * STIFF;   // ressort de rappel vers le centre
+    vel *= DAMP;              // amortissement → petit bounce, pas plus
+    offset += vel;
+    if (offset >  MAXOFF) { offset =  MAXOFF; vel = 0; }
+    if (offset < -MAXOFF) { offset = -MAXOFF; vel = 0; }
+    bar.style.transform = 'translateY(calc(-50% + ' + offset.toFixed(2) + 'px))';
+    if (Math.abs(offset) < 0.12 && Math.abs(vel) < 0.12) {
+      bar.style.transform = 'translateY(-50%)'; offset = 0; vel = 0; running = false; return;
+    }
+    requestAnimationFrame(tick);
+  }
+  window.addEventListener('scroll', function () {
+    var now = window.pageYOffset || 0;
+    vel += -(now - prev) * PUSH;   // le scroll pousse la barre (retard), le ressort la ramène
+    prev = now;
+    if (!running) { running = true; requestAnimationFrame(tick); }
+  }, { passive: true });
+})();
+
+// ── Tooltip dynamique qui suit le curseur ─────────────────────────────────
+(function () {
+  var tip = document.getElementById('cursor-tip');
+  if (!tip) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var tx = 0, ty = 0, x = 0, y = 0, cur = null, raf = 0, placed = false;
+
+  document.addEventListener('mouseover', function (e) {
+    var el = e.target.closest ? e.target.closest('[data-tip]') : null;
+    if (el) {
+      if (el !== cur) {
+        cur = el;
+        tip.textContent = el.getAttribute('data-tip');
+        var c = (el.style && el.style.getPropertyValue('--c')) || '';
+        tip.style.setProperty('--tipc', c.trim() || 'var(--cyan)');
+      }
+      tip.classList.add('show');
+      if (!raf) loop();
+    } else if (cur) {
+      cur = null; tip.classList.remove('show');
+    }
+  });
+
+  document.addEventListener('mousemove', function (e) {
+    tx = e.clientX; ty = e.clientY;
+    if (!placed) { x = tx; y = ty; placed = true; }   // évite un glissé depuis le coin au 1er survol
+    if (cur && !raf) loop();
+  }, { passive: true });
+
+  function loop() {
+    raf = requestAnimationFrame(loop);
+    var ease = reduce ? 1 : 0.22;                       // le retard "vivant"
+    x += (tx - x) * ease; y += (ty - y) * ease;
+    tip.style.left = x.toFixed(1) + 'px';
+    tip.style.top  = y.toFixed(1) + 'px';
+    if (!cur && Math.abs(tx - x) < 0.4 && Math.abs(ty - y) < 0.4) { cancelAnimationFrame(raf); raf = 0; }
+  }
+})();
+</script>
+
 </body>
 </html>

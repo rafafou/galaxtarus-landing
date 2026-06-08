@@ -5,11 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Galaxtarus — Tech</title>
 <link rel="stylesheet" href="styles.css" />
+<style>
+  .music-btn {
+    background: transparent;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    font-family: 'Consolas', monospace;
+    font-size: 10px; letter-spacing: 2px;
+    padding: 5px 12px; cursor: pointer;
+    text-transform: uppercase; transition: all 0.2s;
+    margin-left: 16px; white-space: nowrap;
+  }
+  .music-btn:hover { background: var(--cyan); color: var(--bg-0); }
+</style>
 </head>
 <body>
 
 <nav class="top">
   <div class="brand"><a href="index.html"><b>GALAXTARUS</b></a></div>
+  <button id="btn-music" class="music-btn" onclick="toggleMusic()">&#9654; &nbsp;MUSIC</button>
   <div class="center">
     <a href="index.html" data-en="Overview" data-fr="Accueil">Overview</a>
     <a href="game.html" data-en="The Game" data-fr="Le Jeu">The Game</a>
@@ -168,6 +182,10 @@ const ai     = new G.systems.AiDirector(game);</pre>
   <div data-en="© 2026 Galaxtarus · Made on a USB stick · Written with an AI" data-fr="© 2026 Galaxtarus · Fabriqué sur une clé USB · Écrit avec une IA">© 2026 Galaxtarus · Made on a USB stick · Written with an AI</div>
 </footer>
 
+<script src="../galaxtarus_oop/src/audio/AudioManager.js"></script>
+<script src="../galaxtarus_oop/src/audio/MusicPlayer.js"></script>
+<script src="../galaxtarus_oop/assets/audio/music/theme_galaxtarus.js"></script>
 <script src="i18n.js"></script>
+<script src="music.js"></script>
 </body>
 </html>

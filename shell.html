@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Galaxtarus</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* Shell layout — nav fixe en haut, iframe en dessous */
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { display: flex; flex-direction: column; }
+
+  /* Override nav fixed pour qu'elle soit dans le flux flex */
+  nav.top {
+    position: relative !important;
+    flex-shrink: 0;
+    background: rgba(5,8,17,0.98) !important;
+    backdrop-filter: blur(4px);
+  }
+
+  /* Iframe plein écran sous la nav */
+  #content-frame {
+    flex: 1;
+    border: none;
+    width: 100%;
+    display: block;
+    min-height: 0;
+  }
+
+  /* Bouton music */
+  .music-btn {
+    background: transparent;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    font-family: 'Consolas', monospace;
+    font-size: 10px; letter-spacing: 2px;
+    padding: 5px 12px; cursor: pointer;
+    text-transform: uppercase; transition: all 0.2s;
+    margin-left: 16px; white-space: nowrap;
+  }
+  .music-btn:hover { background: var(--cyan); color: var(--bg-0); }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="brand"><b>GALAXTARUS</b></div>
+  <button id="btn-music" class="music-btn" onclick="toggleMusic()">&#9654; &nbsp;MUSIC</button>
+  <div class="center">
+    <a href="index.html"  target="content" data-page="index.html"  data-en="Overview"    data-fr="Accueil"     class="active">Overview</a>
+    <a href="game.html"   target="content" data-page="game.html"   data-en="The Game"    data-fr="Le Jeu">The Game</a>
+    <a href="engine.html" target="content" data-page="engine.html" data-en="The Engine"  data-fr="Le Moteur">The Engine</a>
+    <a href="tech.html"   target="content" data-page="tech.html"   data-en="Tech"        data-fr="Tech">Tech</a>
+  </div>
+  <div class="lang-toggle">
+    <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+    <button id="btn-fr" onclick="setLang('fr')">FR</button>
+  </div>
+</nav>
+
+<iframe id="content-frame" name="content" src="index.html"></iframe>
+
+<!-- Moteur audio (~83 Ko) chargé à la DEMANDE au premier clic sur MUSIC,
+     via injection dynamique dans music.js. Rien de lourd au démarrage.
+     Les fichiers moteur (galaxtarus_oop/) ne sont pas modifiés. -->
+<script src="music.js"></script>
+
+<script>
+  var frame = document.getElementById('content-frame');
+
+  // À chaque chargement d'une page dans l'iframe :
+  // 1. cacher la nav interne (on a la nôtre)
+  // 2. mettre à jour le lien actif dans notre nav
+  frame.addEventListener('load', function () {
+    try {
+      var doc = frame.contentDocument;
+
+      // Cacher nav + footer interne via injection CSS
+      var style = doc.createElement('style');
+      style.textContent = 'nav.top { display:none !important; }';
+      doc.head.appendChild(style);
+
+      // Mettre à jour lien actif
+      var page = frame.contentWindow.location.href.split('/').pop().split('?')[0] || 'index.html';
+      document.querySelectorAll('nav .center a').forEach(function (a) {
+        a.classList.toggle('active', a.getAttribute('data-page') === page);
+      });
+
+      // Propager la langue courante à la page interne
+      var saved = 'en';
+      try { saved = localStorage.getItem('galaxtarus-lang') || 'en'; } catch (e) {}
+      if (frame.contentWindow.setLang) frame.contentWindow.setLang(saved);
+
+    } catch (e) { /* cross-origin guard — ne devrait pas arriver en file:// */ }
+  });
+
+  // Toggle langue — met à jour la nav du shell ET la page interne
+  function setLang(lang) {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-en],[data-fr]').forEach(function (el) {
+      var key = 'data-' + lang;
+      if (el.hasAttribute(key)) el.innerHTML = el.getAttribute(key);
+    });
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+    try { localStorage.setItem('galaxtarus-lang', lang); } catch (e) {}
+    try { frame.contentWindow.setLang(lang); } catch (e) {}
+  }
+
+  // Lire la langue sauvegardée au démarrage
+  (function () {
+    var saved = 'en';
+    try { saved = localStorage.getItem('galaxtarus-lang') || 'en'; } catch (e) {}
+    setLang(saved);
+  })();
+</script>
+
+</body>
+</html>

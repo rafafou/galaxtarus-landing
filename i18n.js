@@ -8,6 +8,13 @@ function setLang(lang) {
       el.innerHTML = el.getAttribute(key);
     }
   });
+  // aria-label bilingues (accessibilité) : suit la langue active aussi.
+  document.querySelectorAll('[data-en-aria], [data-fr-aria]').forEach(function (el) {
+    var ak = 'data-' + lang + '-aria';
+    if (el.hasAttribute(ak)) {
+      el.setAttribute('aria-label', el.getAttribute(ak));
+    }
+  });
   var btnEn = document.getElementById('btn-en');
   var btnFr = document.getElementById('btn-fr');
   if (btnEn) btnEn.classList.toggle('active', lang === 'en');
