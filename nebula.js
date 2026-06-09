@@ -5,7 +5,8 @@
   var canvas = document.getElementById('nebula-bg');
   if (!canvas) return;
   var ctx = canvas.getContext('2d');
-   if (window.innerWidth <= 820) { canvas.style.display = 'none'; return; }
+var _gzA; try { _gzA = localStorage.getItem('gzAnim'); } catch(e) {}
+  if (window.innerWidth <= 820 ? _gzA !== 'on' : _gzA === 'off') { canvas.style.display = 'none'; return; }
   var W, H, scrollY = 0, t = 0;
   var mouseX = -9999, mouseY = -9999;
   var LITE = false, forcedLite = false;
